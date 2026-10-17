@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vértice Forense · Gobierno de Confidencialidad en Oracle bajo ISO/IEC 27001:2022</title>
+  <meta name="description" content="Consultoría especializada en gobierno de confidencialidad, control de accesos y auditoría técnica sobre Oracle Database 21c XE bajo ISO/IEC 27001:2022.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Paleta institucional de 6 colores con nombre y hex */
+      --azul-tinta: #0F1E2E;         /* 1. Azul tinta abisal (base institucional) */
+      --piedra-papel: #F5F3EE;       /* 2. Piedra papel (neutro cálido claro de fondo) */
+      --laton-brunido: #9A7840;      /* 3. Dorado latón apagado (único acento) */
+      --verde-cumple: #1D5B3A;       /* 4. Verde bosque (estado: cumple / riesgo bajo) */
+      --ambar-parcial: #946210;      /* 5. Ámbar ocre (estado: parcial / riesgo medio-alto) */
+      --carmesi-critico: #8B2626;    /* 6. Carmesí auditoría (estado: no cumple / crítico) */
+
+      /* Derivados funcionales para contraste AA y estructura */
+      --bg-primario: var(--piedra-papel);
+      --bg-secundario: #EBE8E0;
+      --bg-superficie: #FAF9F6;
+      --bg-codigo: #101923;
+      --texto-primario: var(--azul-tinta);
+      --texto-secundario: #3A4959;
+      --texto-tenue: #5C6B7A;
+      --borde-fino: #D5D0C5;
+      --borde-fuerte: #9FA8B2;
+      --acento: var(--laton-brunido);
+      --acento-suave: rgba(154, 120, 64, 0.12);
+
+      /* Estados semánticos de fondo y borde */
+      --cumple-bg: #E6F0EA;
+      --cumple-texto: #14452B;
+      --parcial-bg: #F7EFE0;
+      --parcial-texto: #734B08;
+      --nocumple-bg: #F5E6E6;
+      --nocumple-texto: #6E1B1B;
+      --neutro-bg: #E5E4DF;
+      --neutro-texto: #49545E;
+
+      /* Riesgo: niveles adicionales dentro de la misma gama semántica */
+      --riesgo-alto-bg: #F4E6DC;
+      --riesgo-alto-texto: #7C3715;
+
+      /* Tipografía */
+      --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+      /* Layout */
+      --max-width: 1280px;
+      --header-height: 72px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-primario: #0B1520;
+        --bg-secundario: #111F2E;
+        --bg-superficie: #152536;
+        --bg-codigo: #070E16;
+        --texto-primario: #ECEAE4;
+        --texto-secundario: #B8C2CC;
+        --texto-tenue: #8A99A8;
+        --borde-fino: #24364A;
+        --borde-fuerte: #3E546B;
+        --acento: #C29D61;
+        --acento-suave: rgba(194, 157, 97, 0.16);
+
+        --cumple-bg: rgba(29, 91, 58, 0.28);
+        --cumple-texto: #8CE0B1;
+        --parcial-bg: rgba(148, 98, 16, 0.28);
+        --parcial-texto: #F5C77E;
+        --nocumple-bg: rgba(139, 38, 38, 0.30);
+        --nocumple-texto: #F59898;
+        --neutro-bg: #1E2F42;
+        --neutro-texto: #B0BDC9;
+        --riesgo-alto-bg: rgba(168, 74, 28, 0.28);
+        --riesgo-alto-texto: #F4B183;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg-primario: #0B1520;
+      --bg-secundario: #111F2E;
+      --bg-superficie: #152536;
+      --bg-codigo: #070E16;
+      --texto-primario: #ECEAE4;
+      --texto-secundario: #B8C2CC;
+      --texto-tenue: #8A99A8;
+      --borde-fino: #24364A;
+      --borde-fuerte: #3E546B;
+      --acento: #C29D61;
+      --acento-suave: rgba(194, 157, 97, 0.16);
+
+      --cumple-bg: rgba(29, 91, 58, 0.28);
+      --cumple-texto: #8CE0B1;
+      --parcial-bg: rgba(148, 98, 16, 0.28);
+      --parcial-texto: #F5C77E;
+      --nocumple-bg: rgba(139, 38, 38, 0.30);
+      --nocumple-texto: #F59898;
+      --neutro-bg: #1E2F42;
+      --neutro-texto: #B0BDC9;
+      --riesgo-alto-bg: rgba(168, 74, 28, 0.28);
+      --riesgo-alto-texto: #F4B183;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    body {
+      background-color: var(--bg-primario);
+      color: var(--texto-primario);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Foco accesible por teclado */
+    :focus-visible {
+      outline: 2px solid var(--acento);
+      outline-offset: 3px;
+    }
+
+    /* Animación única de entrada inicial */
+    @keyframes entradaSobria {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animacion-inicial {
+      animation: entradaSobria 0.65s ease-out both;
+    }
+
+    /* Sistema de rejilla de 12 columnas */
+    .contenedor {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .grid-12 {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 2rem;
+    }
+
+    /* Tipografía editorial */
+    h1, h2, h3, h4, .cifra-serif {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      line-height: 1.18;
+      color: var(--texto-primario);
+      letter-spacing: -0.015em;
+    }
+
+    h1 {
+      font-size: clamp(2.25rem, 4.2vw, 3.6rem);
+      max-width: 22ch;
+    }
+
+    h2 {
+      font-size: clamp(1.75rem, 2.8vw, 2.4rem);
+      margin-bottom: 1rem;
+      max-width: 30ch;
+    }
+
+    h3 {
+      font-size: 1.28rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      max-width: 72ch;
+      color: var(--texto-secundario);
+    }
+
+    code, pre, .mono {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+    }
+
+    /* Barra superior */
+    .barra-superior {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--header-height);
+      background-color: var(--bg-primario);
+      border-bottom: 1px solid var(--borde-fino);
+    }
+
+    .barra-contenido {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      gap: 1rem;
+    }
+
+    .logotipo {
+      text-decoration: none;
+      color: var(--texto-primario);
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+    }
+
+    .logotipo-marca {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .logotipo-sub {
+      font-size: 0.78rem;
+      color: var(--texto-tenue);
+      border-left: 1px solid var(--borde-fuerte);
+      padding-left: 0.65rem;
+    }
+
+    .nav-principal {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-lista {
+      display: flex;
+      list-style: none;
+      gap: 1.35rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-lista a {
+      text-decoration: none;
+      color: var(--texto-secundario);
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.25rem 0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .nav-lista a:hover,
+    .nav-lista a:focus-visible {
+      color: var(--texto-primario);
+      border-bottom-color: var(--acento);
+    }
+
+    .btn-tema {
+      background: transparent;
+      border: 1px solid var(--borde-fino);
+      color: var(--texto-secundario);
+      padding: 0.35rem 0.65rem;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .btn-tema:hover {
+      border-color: var(--acento);
+      color: var(--texto-primario);
+    }
+
+    /* Secciones generales */
+    section {
+      padding: 5.5rem 0;
+      border-bottom: 1px solid var(--borde-fino);
+    }
+
+    .cabecera-seccion {
+      grid-column: 1 / 5;
+      padding-right: 1.5rem;
+    }
+
+    .cuerpo-seccion {
+      grid-column: 5 / 13;
+    }
+
+    .indice-seccion {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--acento);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Portada */
+    .portada {
+      min-height: calc(90vh - var(--header-height));
+      display: flex;
+      align-items: center;
+      padding: 4.5rem 0;
+      border-bottom: 1px solid var(--borde-fino);
+    }
+
+    .portada-principal {
+      grid-column: 1 / 9;
+    }
+
+    .portada-lateral {
+      grid-column: 9 / 13;
+      border-left: 1px solid var(--borde-fino);
+      padding-left: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .subtitulo-normativo {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--acento);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--borde-fino);
+      display: inline-block;
+    }
+
+    .frase-valor {
+      font-size: 1.2rem;
+      color: var(--texto-secundario);
+      margin-top: 1.5rem;
+      margin-bottom: 2.25rem;
+      max-width: 60ch;
+    }
+
+    .acciones-portada {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* Botones sobrios y directos */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.4rem;
+      font-family: var(--font-sans);
+      font-size: 0.92rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-primario {
+      background-color: var(--azul-tinta);
+      color: #FAF9F6;
+      border-color: var(--azul-tinta);
+    }
+
+    :root[data-theme="dark"] .btn-primario {
+      background-color: var(--acento);
+      color: #0B1520;
+      border-color: var(--acento);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .btn-primario {
+        background-color: var(--acento);
+        color: #0B1520;
+        border-color: var(--acento);
+      }
+    }
+
+    .btn-primario:hover {
+      background-color: var(--acento);
+      border-color: var(--acento);
+      color: #FAF9F6;
+    }
+
+    .btn-secundario {
+      background-color: transparent;
+      color: var(--texto-primario);
+      border-color: var(--borde-fuerte);
+    }
+
+    .btn-secundario:hover {
+      border-color: var(--acento);
+      background-color: var(--acento-suave);
+    }
+
+    .btn-pequeno {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .ficha-tecnica-portada {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .dato-ficha {
+      border-bottom: 1px solid var(--borde-fino);
+      padding-bottom: 0.9rem;
+    }
+
+    .dato-ficha:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .dato-ficha-valor {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--texto-primario);
+      display: block;
+    }
+
+    .dato-ficha-etiqueta {
+      font-size: 0.84rem;
+      color: var(--texto-tenue);
+    }
+
+    /* Sección 3: El problema */
+    .lista-problemas {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      border-top: 1px solid var(--borde-fino);
+    }
+
+    .item-problema {
+      padding: 2rem 1.75rem 2rem 0;
+      border-bottom: 1px solid var(--borde-fino);
+    }
+
+    .item-problema:nth-child(even) {
+      padding-left: 1.75rem;
+      padding-right: 0;
+      border-left: 1px solid var(--borde-fino);
+    }
+
+    .num-problema {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--acento);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    /* Sección 4: Servicio y alcance */
+    .lista-entregables {
+      border-top: 1px solid var(--borde-fino);
+    }
+
+    .fila-entregable {
+      display: grid;
+      grid-template-columns: 70px 1.2fr 2fr;
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--borde-fino);
+      align-items: baseline;
+    }
+
+    .codigo-entregable {
+      font-family: var(--font-mono);
+      color: var(--acento);
+      font-size: 0.85rem;
+    }
+
+    /* Sección 5: Metodología PHVA */
+    .rejilla-phva {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--borde-fino);
+      border-bottom: 1px solid var(--borde-fino);
+    }
+
+    .columna-phva {
+      padding: 2rem 1.5rem;
+      border-right: 1px solid var(--borde-fino);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .columna-phva:first-child {
+      padding-left: 0;
+    }
+
+    .columna-phva:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+
+    .letra-phva {
+      font-family: var(--font-serif);
+      font-size: 2.4rem;
+      color: var(--acento);
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    .producto-phva {
+      margin-top: 1.75rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--borde-fino);
+      font-size: 0.84rem;
+    }
+
+    .producto-phva strong {
+      display: block;
+      color: var(--texto-primario);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Tablas institucionales */
+    .contenedor-tabla {
+      width: 100%;
+      overflow-x: auto;
+      border-top: 1px solid var(--borde-fuerte);
+      border-bottom: 1px solid var(--borde-fuerte);
+      margin-top: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      color: var(--texto-primario);
+      background-color: var(--bg-secundario);
+      padding: 0.85rem 0.9rem;
+      border-bottom: 1px solid var(--borde-fuerte);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.9rem;
+      border-bottom: 1px solid var(--borde-fino);
+      vertical-align: top;
+      color: var(--texto-secundario);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Etiquetas de estado y riesgo */
+    .insignia {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 500;
+      border: 1px solid currentColor;
+      white-space: nowrap;
+    }
+
+    .estado-cumple, .riesgo-bajo {
+      background-color: var(--cumple-bg);
+      color: var(--cumple-texto);
+    }
+
+    .estado-parcial, .riesgo-medio {
+      background-color: var(--parcial-bg);
+      color: var(--parcial-texto);
+    }
+
+    .riesgo-alto {
+      background-color: var(--riesgo-alto-bg);
+      color: var(--riesgo-alto-texto);
+    }
+
+    .estado-nocumple, .riesgo-critico {
+      background-color: var(--nocumple-bg);
+      color: var(--nocumple-texto);
+    }
+
+    .estado-pendiente {
+      background-color: var(--neutro-bg);
+      color: var(--neutro-texto);
+    }
+
+    /* Selectores numéricos en tablas */
+    .select-valor {
+      background-color: var(--bg-superficie);
+      color: var(--texto-primario);
+      border: 1px solid var(--borde-fuerte);
+      padding: 0.3rem 0.45rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* Sección 7: Herramienta interactiva y Panel de madurez (Elemento memorable) */
+    .panel-instrumento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 2rem;
+      background-color: var(--bg-superficie);
+      border: 1px solid var(--borde-fuerte);
+      padding: 2.25rem;
+      margin-bottom: 3rem;
+    }
+
+    .bloque-medidor {
+      grid-column: 1 / 6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--borde-fino);
+      padding-right: 1.5rem;
+    }
+
+    .svg-medidor-wrap {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .anillo-fondo {
+      fill: none;
+      stroke: var(--borde-fino);
+      stroke-width: 12;
+    }
+
+    .anillo-meta {
+      fill: none;
+      stroke: var(--borde-fuerte);
+      stroke-width: 12;
+      stroke-dasharray: 2 8;
+    }
+
+    .anillo-progreso {
+      fill: none;
+      stroke: var(--acento);
+      stroke-width: 12;
+      stroke-linecap: butt;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset 0.45s ease, stroke 0.3s ease;
+    }
+
+    .medidor-lectura {
+      position: absolute;
+      text-align: center;
+    }
+
+    .medidor-cifra {
+      font-family: var(--font-serif);
+      font-size: 3.1rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--texto-primario);
+      display: block;
+    }
+
+    .medidor-escala {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--texto-tenue);
+      margin-top: 0.25rem;
+      display: block;
+    }
+
+    .medidor-nivel-nombre {
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+
+    .resumen-madurez {
+      margin-top: 1.25rem;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--borde-fino);
+      padding-top: 1rem;
+      text-align: center;
+      gap: 0.5rem;
+    }
+
+    .resumen-item-num {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      display: block;
+    }
+
+    .resumen-item-label {
+      font-size: 0.75rem;
+      color: var(--texto-tenue);
+    }
+
+    /* Mapa de calor 5x5 */
+    .bloque-mapa-calor {
+      grid-column: 6 / 13;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cabecera-mapa {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .conmutador-modo {
+      display: inline-flex;
+      border: 1px solid var(--borde-fuerte);
+      background-color: var(--bg-primario);
+    }
+
+    .btn-modo {
+      background: transparent;
+      border: none;
+      padding: 0.45rem 0.9rem;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--texto-secundario);
+      cursor: pointer;
+    }
+
+    .btn-modo.activo {
+      background-color: var(--azul-tinta);
+      color: #FAF9F6;
+    }
+
+    :root[data-theme="dark"] .btn-modo.activo {
+      background-color: var(--acento);
+      color: #0B1520;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .btn-modo.activo {
+        background-color: var(--acento);
+        color: #0B1520;
+      }
+    }
+
+    .contenedor-matriz-5x5 {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .etiqueta-eje-y {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--texto-tenue);
+    }
+
+    .rejilla-5x5 {
+      display: grid;
+      grid-template-columns: 28px repeat(5, 1fr);
+      gap: 4px;
+    }
+
+    .celda-eje {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--texto-tenue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem;
+    }
+
+    .celda-calor {
+      min-height: 54px;
+      border: 1px solid var(--borde-fino);
+      padding: 0.3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .celda-puntaje {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      opacity: 0.75;
+    }
+
+    .celda-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+
+    .chip-riesgo {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      padding: 1px 4px;
+      background-color: var(--bg-superficie);
+      color: var(--texto-primario);
+      border: 1px solid currentColor;
+    }
+
+    .etiqueta-eje-x {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--texto-tenue);
+      margin-top: 0.35rem;
+    }
+
+    .barra-acciones-herramienta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--borde-fino);
+    }
+
+    .grupo-botones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    /* Buscador de controles */
+    .barra-busqueda {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .input-busqueda {
+      flex: 1;
+      min-width: 260px;
+      padding: 0.7rem 0.95rem;
+      font-family: var(--font-sans);
+      font-size: 0.92rem;
+      background-color: var(--bg-superficie);
+      color: var(--texto-primario);
+      border: 1px solid var(--borde-fuerte);
+    }
+
+    /* Batería de pruebas SQL */
+    .resumen-pruebas-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background-color: var(--bg-secundario);
+      border: 1px solid var(--borde-fino);
+      margin-bottom: 1.5rem;
+    }
+
+    .lista-pruebas {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .ficha-prueba {
+      border: 1px solid var(--borde-fino);
+      background-color: var(--bg-superficie);
+      padding: 1.5rem;
+    }
+
+    .ficha-prueba-cabecera {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .meta-prueba {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .id-prueba {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--acento);
+    }
+
+    .botones-resultado-prueba {
+      display: inline-flex;
+      border: 1px solid var(--borde-fuerte);
+    }
+
+    .btn-resultado {
+      background: var(--bg-primario);
+      border: none;
+      border-right: 1px solid var(--borde-fuerte);
+      padding: 0.35rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--texto-secundario);
+      cursor: pointer;
+    }
+
+    .btn-resultado:last-child {
+      border-right: none;
+    }
+
+    .btn-resultado[data-estado="paso"].activo {
+      background-color: var(--verde-cumple);
+      color: #ffffff;
+    }
+
+    .btn-resultado[data-estado="fallo"].activo {
+      background-color: var(--carmesi-critico);
+      color: #ffffff;
+    }
+
+    .btn-resultado[data-estado="na"].activo {
+      background-color: var(--ambar-parcial);
+      color: #ffffff;
+    }
+
+    .bloque-sql {
+      background-color: var(--bg-codigo);
+      color: #E5E9F0;
+      padding: 1rem 1.15rem;
+      overflow-x: auto;
+      margin: 0.85rem 0;
+      border-left: 3px solid var(--acento);
+      position: relative;
+    }
+
+    .bloque-sql pre {
+      margin: 0;
+      line-height: 1.5;
+      white-space: pre;
+    }
+
+    .btn-copiar-sql {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #E5E9F0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 0.2rem 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+
+    .btn-copiar-sql:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .esperado-prueba {
+      font-size: 0.86rem;
+      color: var(--texto-secundario);
+      border-top: 1px solid var(--borde-fino);
+      padding-top: 0.65rem;
+    }
+
+    /* Contacto (sin <form> real) */
+    .rejilla-contacto {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 2.5rem;
+    }
+
+    .grupo-campo {
+      margin-bottom: 1.25rem;
+    }
+
+    .grupo-campo label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      color: var(--texto-primario);
+    }
+
+    .input-form,
+    .textarea-form,
+    .select-form {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      font-family: var(--font-sans);
+      font-size: 0.92rem;
+      background-color: var(--bg-superficie);
+      color: var(--texto-primario);
+      border: 1px solid var(--borde-fuerte);
+    }
+
+    .textarea-form {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .confirmacion-contacto {
+      margin-top: 1.25rem;
+      padding: 1.15rem;
+      border: 1px solid var(--verde-cumple);
+      background-color: var(--cumple-bg);
+      color: var(--cumple-texto);
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .datos-despacho {
+      border-left: 1px solid var(--borde-fino);
+      padding-left: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .aviso-estado {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--acento);
+      min-height: 1.2rem;
+    }
+
+    /* Pie de página */
+    footer {
+      padding: 4rem 0;
+      background-color: var(--bg-secundario);
+      font-size: 0.86rem;
+    }
+
+    .pie-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 2rem;
+    }
+
+    .pie-col-1 {
+      grid-column: 1 / 6;
+    }
+
+    .pie-col-2 {
+      grid-column: 6 / 10;
+    }
+
+    .pie-col-3 {
+      grid-column: 10 / 13;
+    }
+
+    .lista-normativa {
+      list-style: none;
+      display: grid;
+      gap: 0.45rem;
+      color: var(--texto-secundario);
+    }
+
+    .aviso-academico {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--borde-fuerte);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      color: var(--texto-tenue);
+    }
+
+    /* Responsividad hasta 360px */
+    @media (max-width: 1024px) {
+      .cabecera-seccion,
+      .cuerpo-seccion,
+      .portada-principal,
+      .portada-lateral,
+      .bloque-medidor,
+      .bloque-mapa-calor,
+      .pie-col-1,
+      .pie-col-2,
+      .pie-col-3 {
+        grid-column: 1 / 13;
+      }
+
+      .portada-lateral {
+        border-left: none;
+        border-top: 1px solid var(--borde-fino);
+        padding-left: 0;
+        padding-top: 2rem;
+      }
+
+      .ficha-tecnica-portada {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bloque-medidor {
+        border-right: none;
+        border-bottom: 1px solid var(--borde-fino);
+        padding-right: 0;
+        padding-bottom: 2rem;
+      }
+
+      .rejilla-phva {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .columna-phva:nth-child(2) {
+        border-right: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .contenedor {
+        padding: 0 1.1rem;
+      }
+
+      .barra-superior {
+        height: auto;
+        padding: 0.75rem 0;
+      }
+
+      .barra-contenido {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-principal {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .nav-lista {
+        gap: 0.85rem;
+      }
+
+      section {
+        padding: 3.5rem 0;
+      }
+
+      .lista-problemas,
+      .rejilla-phva,
+      .rejilla-contacto,
+      .ficha-tecnica-portada {
+        grid-template-columns: 1fr;
+      }
+
+      .item-problema,
+      .item-problema:nth-child(even) {
+        padding: 1.5rem 0;
+        border-left: none;
+      }
+
+      .columna-phva {
+        padding: 1.5rem 0;
+        border-right: none;
+        border-bottom: 1px solid var(--borde-fino);
+      }
+
+      .fila-entregable {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+      }
+
+      .datos-despacho {
+        border-left: none;
+        border-top: 1px solid var(--borde-fino);
+        padding-left: 0;
+        padding-top: 1.5rem;
+      }
+
+      .panel-instrumento {
+        padding: 1.25rem;
+      }
+
+      .resumen-madurez {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. BARRA SUPERIOR -->
+  <header class="barra-superior">
+    <div class="contenedor barra-contenido">
+      <a href="#portada" class="logotipo" aria-label="Vértice Forense, ir al inicio">
+        <span class="logotipo-marca">VÉRTICE</span>
+        <span class="logotipo-sub">Auditoría &amp; Práctica Oracle</span>
+      </a>
+      <nav class="nav-principal" aria-label="Navegación principal">
+        <ul class="nav-lista">
+          <li><a href="#servicio">Servicio</a></li>
+          <li><a href="#metodologia">Metodología</a></li>
+          <li><a href="#riesgos">Riesgos</a></li>
+          <li><a href="#herramienta">Herramienta</a></li>
+          <li><a href="#pruebas">Pruebas</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+        <button type="button" id="btn-alternar-tema" class="btn-tema" aria-label="Cambiar entre modo claro y oscuro">
+          Tema
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="portada" class="animacion-inicial">
+    <!-- 2. PORTADA -->
+    <section class="portada">
+      <div class="contenedor grid-12">
+        <div class="portada-principal">
+          <span class="subtitulo-normativo">ISO/IEC 27001:2022 · ISO/IEC 27002:2022 · Oracle Database 21c XE (XEPDB1)</span>
+          <h1>Gobierno de confidencialidad y evidencia técnica en bases de datos Oracle.</h1>
+          <p class="frase-valor">
+            Cerramos la brecha entre la política escrita y la configuración real del servidor. Traducimos el Anexo A de la norma en controles observables sobre privilegios, cifrado, redacción y trazabilidad forense.
+          </p>
+          <div class="acciones-portada">
+            <a href="#contacto" class="btn btn-primario">Solicitar diagnóstico</a>
+            <a href="#herramienta" class="btn btn-secundario">Ver la herramienta</a>
+          </div>
+        </div>
+        <aside class="portada-lateral" aria-label="Alcance técnico del servicio">
+          <div class="ficha-tecnica-portada">
+            <div class="dato-ficha">
+              <span class="dato-ficha-valor">6 riesgos R-CONF</span>
+              <span class="dato-ficha-etiqueta">Acceso, autenticación, reposo, uso, red y trazabilidad</span>
+            </div>
+            <div class="dato-ficha">
+              <span class="dato-ficha-valor">12 tareas del DBA</span>
+              <span class="dato-ficha-etiqueta">Evaluadas en escala de madurez 0 a 4 con meta en nivel 3</span>
+            </div>
+            <div class="dato-ficha">
+              <span class="dato-ficha-valor">17 controles Anexo A</span>
+              <span class="dato-ficha-etiqueta">15 controles base de la edición 2022 y 2 complementarios</span>
+            </div>
+            <div class="dato-ficha">
+              <span class="dato-ficha-valor">16 pruebas SQL</span>
+              <span class="dato-ficha-etiqueta">Verificación con segregación de funciones sin usar SYSTEM</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 3. EL PROBLEMA -->
+    <section id="problema">
+      <div class="contenedor grid-12">
+        <div class="cabecera-seccion">
+          <span class="indice-seccion">01 / Diagnóstico de situación</span>
+          <h2>Un control sugerido sin evidencia observable es solo un documento.</h2>
+          <p>
+            Las auditorías técnicas sobre instancias Oracle revelan de forma recurrente cuatro fallas estructurales que comprometen la confidencialidad del activo más sensible de la organización.
+          </p>
+        </div>
+        <div class="cuerpo-seccion">
+          <div class="lista-problemas">
+            <article class="item-problema">
+              <span class="num-problema">I · Acceso y arquitectura multitenant</span>
+              <h3>Privilegios heredados y concesiones excesivas</h3>
+              <p>
+                Los usuarios cambian de puesto y acumulan permisos anteriores («privilege creep»). Los roles anidados sin control, las concesiones al pseudo-rol «PUBLIC», los comodines «ANY» y los privilegios comunes («CONTAINER=ALL» en CDB$ROOT) otorgan acceso efectivo sobre tablas confidenciales que nadie autorizó de forma explícita.
+              </p>
+            </article>
+            <article class="item-problema">
+              <span class="num-problema">II · Datos en reposo y medios físicos</span>
+              <h3>Respaldos y archivos físicos sin cifrar</h3>
+              <p>
+                Proteger las consultas SQL es inútil si los «datafiles», «online redo logs», «archive logs» o copias de RMAN y Data Pump residen en texto claro en el sistema operativo. Quien obtenga una copia física puede montarla en otro servidor y eludir por completo los perfiles y roles de la instancia original.
+              </p>
+            </article>
+            <article class="item-problema">
+              <span class="num-problema">III · Segregación de funciones y registro</span>
+              <h3>Auditoría insuficiente o manipulable</h3>
+              <p>
+                Los registros de «SYS.AUD$» o «UNIFIED_AUDIT_TRAIL» no son inmutables por sí mismos. Cuando el administrador de infraestructura concentra también los permisos para leer tablas del negocio y borrar la bitácora sin separación entre «DBA», «AUDIT_ADMIN» y «AUDIT_VIEWER», la evidencia forense pierde validez ante un incidente.
+              </p>
+            </article>
+            <article class="item-problema">
+              <span class="num-problema">IV · Datos en uso y fuga de información</span>
+              <h3>Datos reales en entornos de prueba</h3>
+              <p>
+                Los clones de desarrollo y pruebas («DEV/TEST») generados mediante «RMAN DUPLICATE» o «expdp» conservan cédulas, salarios y expedientes reales en entornos con controles laxos. A esto se suma la ejecución libre de paquetes de salida («UTL_FILE», «UTL_HTTP», «UTL_TCP») concedidos por defecto a «PUBLIC».
+              </p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SERVICIO Y ALCANCE -->
+    <section id="servicio">
+      <div class="contenedor grid-12">
+        <div class="cabecera-seccion">
+          <span class="indice-seccion">02 / Servicio y alcance</span>
+          <h2>Entregables verificables en el servidor.</h2>
+          <p>
+            Nuestro servicio «Gobierno de confidencialidad en bases de datos Oracle bajo ISO/IEC 27001:2022» está diseñado para Oracle Database 21c Express Edition (contenedor «CDB$ROOT» y base conectable «XEPDB1»), alineado con el principio de mínimo privilegio y la Ley N.° 8968 de Costa Rica.
+          </p>
+        </div>
+        <div class="cuerpo-seccion">
+          <div class="lista-entregables">
+            <div class="fila-entregable">
+              <span class="codigo-entregable">ENT-01</span>
+              <h3>Diagnóstico de arquitectura y segregación</h3>
+              <p>Evaluación de límites operativos en Oracle 21c XE (2 hilos de CPU, 2 GB de RAM, 12 GB de datos antes de «ORA-12592»), revisión de usuarios comunes frente a locales y diseño de tres roles separados: «ROL_SEGURIDAD», «ROL_DBA_INFRA» y «ROL_AUDITOR».</p>
+            </div>
+            <div class="fila-entregable">
+              <span class="codigo-entregable">ENT-02</span>
+              <h3>Matriz de evaluación de madurez (0 a 4)</h3>
+              <p>Calificación estructurada de las 12 tareas críticas del DBA vinculadas con los riesgos «R-CONF-01» a «R-CONF-06». Define criterios objetivos para alcanzar el nivel 3 («Definido») en cada operación.</p>
+            </div>
+            <div class="fila-entregable">
+              <span class="codigo-entregable">ENT-03</span>
+              <h3>Plan de tratamiento y Declaración de Aplicabilidad (SoA)</h3>
+              <p>Justificación de los 15 controles del Anexo A 2022 y los 2 controles complementarios («A8.24» y «A8.8»), equivalencias con la edición 2013 y cuantificación del riesgo inherente frente al residual esperado para aceptación de la dirección.</p>
+            </div>
+            <div class="fila-entregable">
+              <span class="codigo-entregable">ENT-04</span>
+              <h3>Scripts de implementación, endurecimiento y verificación</h3>
+              <p>Entrega de tres scripts probados en «XEPDB1»: «00_preparacion.sql» (cuentas nominales, perfiles, Data Redaction, VPD y políticas de auditoría), «01_endurecimiento.sql» (revocación de «UTL_*», keystore TDE «AES256», modo «ARCHIVELOG» y retención) y «02_verificacion.sql».</p>
+            </div>
+            <div class="fila-entregable">
+              <span class="codigo-entregable">ENT-05</span>
+              <h3>Informe de evidencia observable para el auditor</h3>
+              <p>Expediente técnico de los 15 controles observables («CO-01» a «CO-15») y la prueba de enmascaramiento estático en clones («T-16»), obtenido mediante una cuenta de lectura restringida sin «SELECT_CATALOG_ROLE».</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. METODOLOGÍA PHVA -->
+    <section id="metodologia">
+      <div class="contenedor">
+        <div class="grid-12" style="margin-bottom: 2.5rem;">
+          <div class="cabecera-seccion">
+            <span class="indice-seccion">03 / Metodología operativa</span>
+            <h2>Ciclo PHVA de mejora continua.</h2>
+          </div>
+          <div class="cuerpo-seccion">
+            <p>
+              La cláusula 10.1 de la norma ISO/IEC 27001:2022 exige mejora continua del Sistema de Gestión de Seguridad de la Información (SGSI). Organizamos la intervención en cuatro fases disciplinadas; cada fase produce un artefacto auditable.
+            </p>
+          </div>
+        </div>
+
+        <div class="rejilla-phva">
+          <article class="columna-phva">
