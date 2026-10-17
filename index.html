@@ -1,1394 +1,247 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vértice Forense · Gobierno de Confidencialidad en Oracle bajo ISO/IEC 27001:2022</title>
-  <meta name="description" content="Consultoría especializada en gobierno de confidencialidad, control de accesos y auditoría técnica sobre Oracle Database 21c XE bajo ISO/IEC 27001:2022.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      /* Paleta institucional de 6 colores con nombre y hex */
-      --azul-tinta: #0F1E2E;         /* 1. Azul tinta abisal (base institucional) */
-      --piedra-papel: #F5F3EE;       /* 2. Piedra papel (neutro cálido claro de fondo) */
-      --laton-brunido: #9A7840;      /* 3. Dorado latón apagado (único acento) */
-      --verde-cumple: #1D5B3A;       /* 4. Verde bosque (estado: cumple / riesgo bajo) */
-      --ambar-parcial: #946210;      /* 5. Ámbar ocre (estado: parcial / riesgo medio-alto) */
-      --carmesi-critico: #8B2626;    /* 6. Carmesí auditoría (estado: no cumple / crítico) */
-
-      /* Derivados funcionales para contraste AA y estructura */
-      --bg-primario: var(--piedra-papel);
-      --bg-secundario: #EBE8E0;
-      --bg-superficie: #FAF9F6;
-      --bg-codigo: #101923;
-      --texto-primario: var(--azul-tinta);
-      --texto-secundario: #3A4959;
-      --texto-tenue: #5C6B7A;
-      --borde-fino: #D5D0C5;
-      --borde-fuerte: #9FA8B2;
-      --acento: var(--laton-brunido);
-      --acento-suave: rgba(154, 120, 64, 0.12);
-
-      /* Estados semánticos de fondo y borde */
-      --cumple-bg: #E6F0EA;
-      --cumple-texto: #14452B;
-      --parcial-bg: #F7EFE0;
-      --parcial-texto: #734B08;
-      --nocumple-bg: #F5E6E6;
-      --nocumple-texto: #6E1B1B;
-      --neutro-bg: #E5E4DF;
-      --neutro-texto: #49545E;
-
-      /* Riesgo: niveles adicionales dentro de la misma gama semántica */
-      --riesgo-alto-bg: #F4E6DC;
-      --riesgo-alto-texto: #7C3715;
-
-      /* Tipografía */
-      --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
-      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
-
-      /* Layout */
-      --max-width: 1280px;
-      --header-height: 72px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg-primario: #0B1520;
-        --bg-secundario: #111F2E;
-        --bg-superficie: #152536;
-        --bg-codigo: #070E16;
-        --texto-primario: #ECEAE4;
-        --texto-secundario: #B8C2CC;
-        --texto-tenue: #8A99A8;
-        --borde-fino: #24364A;
-        --borde-fuerte: #3E546B;
-        --acento: #C29D61;
-        --acento-suave: rgba(194, 157, 97, 0.16);
-
-        --cumple-bg: rgba(29, 91, 58, 0.28);
-        --cumple-texto: #8CE0B1;
-        --parcial-bg: rgba(148, 98, 16, 0.28);
-        --parcial-texto: #F5C77E;
-        --nocumple-bg: rgba(139, 38, 38, 0.30);
-        --nocumple-texto: #F59898;
-        --neutro-bg: #1E2F42;
-        --neutro-texto: #B0BDC9;
-        --riesgo-alto-bg: rgba(168, 74, 28, 0.28);
-        --riesgo-alto-texto: #F4B183;
-      }
-    }
-
-    :root[data-theme="dark"] {
-      --bg-primario: #0B1520;
-      --bg-secundario: #111F2E;
-      --bg-superficie: #152536;
-      --bg-codigo: #070E16;
-      --texto-primario: #ECEAE4;
-      --texto-secundario: #B8C2CC;
-      --texto-tenue: #8A99A8;
-      --borde-fino: #24364A;
-      --borde-fuerte: #3E546B;
-      --acento: #C29D61;
-      --acento-suave: rgba(194, 157, 97, 0.16);
-
-      --cumple-bg: rgba(29, 91, 58, 0.28);
-      --cumple-texto: #8CE0B1;
-      --parcial-bg: rgba(148, 98, 16, 0.28);
-      --parcial-texto: #F5C77E;
-      --nocumple-bg: rgba(139, 38, 38, 0.30);
-      --nocumple-texto: #F59898;
-      --neutro-bg: #1E2F42;
-      --neutro-texto: #B0BDC9;
-      --riesgo-alto-bg: rgba(168, 74, 28, 0.28);
-      --riesgo-alto-texto: #F4B183;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      font-size: 16px;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    body {
-      background-color: var(--bg-primario);
-      color: var(--texto-primario);
-      font-family: var(--font-sans);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Foco accesible por teclado */
-    :focus-visible {
-      outline: 2px solid var(--acento);
-      outline-offset: 3px;
-    }
-
-    /* Animación única de entrada inicial */
-    @keyframes entradaSobria {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .animacion-inicial {
-      animation: entradaSobria 0.65s ease-out both;
-    }
-
-    /* Sistema de rejilla de 12 columnas */
-    .contenedor {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    .grid-12 {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 2rem;
-    }
-
-    /* Tipografía editorial */
-    h1, h2, h3, h4, .cifra-serif {
-      font-family: var(--font-serif);
-      font-weight: 600;
-      line-height: 1.18;
-      color: var(--texto-primario);
-      letter-spacing: -0.015em;
-    }
-
-    h1 {
-      font-size: clamp(2.25rem, 4.2vw, 3.6rem);
-      max-width: 22ch;
-    }
-
-    h2 {
-      font-size: clamp(1.75rem, 2.8vw, 2.4rem);
-      margin-bottom: 1rem;
-      max-width: 30ch;
-    }
-
-    h3 {
-      font-size: 1.28rem;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      max-width: 72ch;
-      color: var(--texto-secundario);
-    }
-
-    code, pre, .mono {
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-    }
-
-    /* Barra superior */
-    .barra-superior {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: var(--header-height);
-      background-color: var(--bg-primario);
-      border-bottom: 1px solid var(--borde-fino);
-    }
-
-    .barra-contenido {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 100%;
-      gap: 1rem;
-    }
-
-    .logotipo {
-      text-decoration: none;
-      color: var(--texto-primario);
-      display: flex;
-      align-items: baseline;
-      gap: 0.65rem;
-    }
-
-    .logotipo-marca {
-      font-family: var(--font-serif);
-      font-size: 1.35rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .logotipo-sub {
-      font-size: 0.78rem;
-      color: var(--texto-tenue);
-      border-left: 1px solid var(--borde-fuerte);
-      padding-left: 0.65rem;
-    }
-
-    .nav-principal {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    .nav-lista {
-      display: flex;
-      list-style: none;
-      gap: 1.35rem;
-      flex-wrap: wrap;
-    }
-
-    .nav-lista a {
-      text-decoration: none;
-      color: var(--texto-secundario);
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 0.25rem 0;
-      border-bottom: 2px solid transparent;
-      transition: color 0.15s ease, border-color 0.15s ease;
-    }
-
-    .nav-lista a:hover,
-    .nav-lista a:focus-visible {
-      color: var(--texto-primario);
-      border-bottom-color: var(--acento);
-    }
-
-    .btn-tema {
-      background: transparent;
-      border: 1px solid var(--borde-fino);
-      color: var(--texto-secundario);
-      padding: 0.35rem 0.65rem;
-      font-family: var(--font-sans);
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
-    .btn-tema:hover {
-      border-color: var(--acento);
-      color: var(--texto-primario);
-    }
-
-    /* Secciones generales */
-    section {
-      padding: 5.5rem 0;
-      border-bottom: 1px solid var(--borde-fino);
-    }
-
-    .cabecera-seccion {
-      grid-column: 1 / 5;
-      padding-right: 1.5rem;
-    }
-
-    .cuerpo-seccion {
-      grid-column: 5 / 13;
-    }
-
-    .indice-seccion {
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: var(--acento);
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
-    /* Portada */
-    .portada {
-      min-height: calc(90vh - var(--header-height));
-      display: flex;
-      align-items: center;
-      padding: 4.5rem 0;
-      border-bottom: 1px solid var(--borde-fino);
-    }
-
-    .portada-principal {
-      grid-column: 1 / 9;
-    }
-
-    .portada-lateral {
-      grid-column: 9 / 13;
-      border-left: 1px solid var(--borde-fino);
-      padding-left: 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .subtitulo-normativo {
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-      color: var(--acento);
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--borde-fino);
-      display: inline-block;
-    }
-
-    .frase-valor {
-      font-size: 1.2rem;
-      color: var(--texto-secundario);
-      margin-top: 1.5rem;
-      margin-bottom: 2.25rem;
-      max-width: 60ch;
-    }
-
-    .acciones-portada {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    /* Botones sobrios y directos */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.8rem 1.4rem;
-      font-family: var(--font-sans);
-      font-size: 0.92rem;
-      font-weight: 500;
-      text-decoration: none;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    }
-
-    .btn-primario {
-      background-color: var(--azul-tinta);
-      color: #FAF9F6;
-      border-color: var(--azul-tinta);
-    }
-
-    :root[data-theme="dark"] .btn-primario {
-      background-color: var(--acento);
-      color: #0B1520;
-      border-color: var(--acento);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) .btn-primario {
-        background-color: var(--acento);
-        color: #0B1520;
-        border-color: var(--acento);
-      }
-    }
-
-    .btn-primario:hover {
-      background-color: var(--acento);
-      border-color: var(--acento);
-      color: #FAF9F6;
-    }
-
-    .btn-secundario {
-      background-color: transparent;
-      color: var(--texto-primario);
-      border-color: var(--borde-fuerte);
-    }
-
-    .btn-secundario:hover {
-      border-color: var(--acento);
-      background-color: var(--acento-suave);
-    }
-
-    .btn-pequeno {
-      padding: 0.4rem 0.75rem;
-      font-size: 0.8rem;
-    }
-
-    .ficha-tecnica-portada {
-      display: grid;
-      gap: 1.25rem;
-    }
-
-    .dato-ficha {
-      border-bottom: 1px solid var(--borde-fino);
-      padding-bottom: 0.9rem;
-    }
-
-    .dato-ficha:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .dato-ficha-valor {
-      font-family: var(--font-serif);
-      font-size: 1.75rem;
-      font-weight: 600;
-      color: var(--texto-primario);
-      display: block;
-    }
-
-    .dato-ficha-etiqueta {
-      font-size: 0.84rem;
-      color: var(--texto-tenue);
-    }
-
-    /* Sección 3: El problema */
-    .lista-problemas {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      border-top: 1px solid var(--borde-fino);
-    }
-
-    .item-problema {
-      padding: 2rem 1.75rem 2rem 0;
-      border-bottom: 1px solid var(--borde-fino);
-    }
-
-    .item-problema:nth-child(even) {
-      padding-left: 1.75rem;
-      padding-right: 0;
-      border-left: 1px solid var(--borde-fino);
-    }
-
-    .num-problema {
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: var(--acento);
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-
-    /* Sección 4: Servicio y alcance */
-    .lista-entregables {
-      border-top: 1px solid var(--borde-fino);
-    }
-
-    .fila-entregable {
-      display: grid;
-      grid-template-columns: 70px 1.2fr 2fr;
-      gap: 1.5rem;
-      padding: 1.5rem 0;
-      border-bottom: 1px solid var(--borde-fino);
-      align-items: baseline;
-    }
-
-    .codigo-entregable {
-      font-family: var(--font-mono);
-      color: var(--acento);
-      font-size: 0.85rem;
-    }
-
-    /* Sección 5: Metodología PHVA */
-    .rejilla-phva {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border-top: 1px solid var(--borde-fino);
-      border-bottom: 1px solid var(--borde-fino);
-    }
-
-    .columna-phva {
-      padding: 2rem 1.5rem;
-      border-right: 1px solid var(--borde-fino);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .columna-phva:first-child {
-      padding-left: 0;
-    }
-
-    .columna-phva:last-child {
-      border-right: none;
-      padding-right: 0;
-    }
-
-    .letra-phva {
-      font-family: var(--font-serif);
-      font-size: 2.4rem;
-      color: var(--acento);
-      line-height: 1;
-      margin-bottom: 0.75rem;
-    }
-
-    .producto-phva {
-      margin-top: 1.75rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--borde-fino);
-      font-size: 0.84rem;
-    }
-
-    .producto-phva strong {
-      display: block;
-      color: var(--texto-primario);
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      margin-bottom: 0.25rem;
-    }
-
-    /* Tablas institucionales */
-    .contenedor-tabla {
-      width: 100%;
-      overflow-x: auto;
-      border-top: 1px solid var(--borde-fuerte);
-      border-bottom: 1px solid var(--borde-fuerte);
-      margin-top: 1rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-
-    th {
-      font-family: var(--font-sans);
-      font-weight: 600;
-      color: var(--texto-primario);
-      background-color: var(--bg-secundario);
-      padding: 0.85rem 0.9rem;
-      border-bottom: 1px solid var(--borde-fuerte);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 0.9rem;
-      border-bottom: 1px solid var(--borde-fino);
-      vertical-align: top;
-      color: var(--texto-secundario);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    /* Etiquetas de estado y riesgo */
-    .insignia {
-      display: inline-block;
-      padding: 0.2rem 0.55rem;
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      font-weight: 500;
-      border: 1px solid currentColor;
-      white-space: nowrap;
-    }
-
-    .estado-cumple, .riesgo-bajo {
-      background-color: var(--cumple-bg);
-      color: var(--cumple-texto);
-    }
-
-    .estado-parcial, .riesgo-medio {
-      background-color: var(--parcial-bg);
-      color: var(--parcial-texto);
-    }
-
-    .riesgo-alto {
-      background-color: var(--riesgo-alto-bg);
-      color: var(--riesgo-alto-texto);
-    }
-
-    .estado-nocumple, .riesgo-critico {
-      background-color: var(--nocumple-bg);
-      color: var(--nocumple-texto);
-    }
-
-    .estado-pendiente {
-      background-color: var(--neutro-bg);
-      color: var(--neutro-texto);
-    }
-
-    /* Selectores numéricos en tablas */
-    .select-valor {
-      background-color: var(--bg-superficie);
-      color: var(--texto-primario);
-      border: 1px solid var(--borde-fuerte);
-      padding: 0.3rem 0.45rem;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-
-    /* Sección 7: Herramienta interactiva y Panel de madurez (Elemento memorable) */
-    .panel-instrumento {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 2rem;
-      background-color: var(--bg-superficie);
-      border: 1px solid var(--borde-fuerte);
-      padding: 2.25rem;
-      margin-bottom: 3rem;
-    }
-
-    .bloque-medidor {
-      grid-column: 1 / 6;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-right: 1px solid var(--borde-fino);
-      padding-right: 1.5rem;
-    }
-
-    .svg-medidor-wrap {
-      position: relative;
-      width: 250px;
-      height: 250px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .anillo-fondo {
-      fill: none;
-      stroke: var(--borde-fino);
-      stroke-width: 12;
-    }
-
-    .anillo-meta {
-      fill: none;
-      stroke: var(--borde-fuerte);
-      stroke-width: 12;
-      stroke-dasharray: 2 8;
-    }
-
-    .anillo-progreso {
-      fill: none;
-      stroke: var(--acento);
-      stroke-width: 12;
-      stroke-linecap: butt;
-      transform: rotate(-90deg);
-      transform-origin: 50% 50%;
-      transition: stroke-dashoffset 0.45s ease, stroke 0.3s ease;
-    }
-
-    .medidor-lectura {
-      position: absolute;
-      text-align: center;
-    }
-
-    .medidor-cifra {
-      font-family: var(--font-serif);
-      font-size: 3.1rem;
-      font-weight: 700;
-      line-height: 1;
-      color: var(--texto-primario);
-      display: block;
-    }
-
-    .medidor-escala {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--texto-tenue);
-      margin-top: 0.25rem;
-      display: block;
-    }
-
-    .medidor-nivel-nombre {
-      margin-top: 0.5rem;
-      display: inline-block;
-    }
-
-    .resumen-madurez {
-      margin-top: 1.25rem;
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border-top: 1px solid var(--borde-fino);
-      padding-top: 1rem;
-      text-align: center;
-      gap: 0.5rem;
-    }
-
-    .resumen-item-num {
-      font-family: var(--font-serif);
-      font-size: 1.35rem;
-      font-weight: 600;
-      display: block;
-    }
-
-    .resumen-item-label {
-      font-size: 0.75rem;
-      color: var(--texto-tenue);
-    }
-
-    /* Mapa de calor 5x5 */
-    .bloque-mapa-calor {
-      grid-column: 6 / 13;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .cabecera-mapa {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .conmutador-modo {
-      display: inline-flex;
-      border: 1px solid var(--borde-fuerte);
-      background-color: var(--bg-primario);
-    }
-
-    .btn-modo {
-      background: transparent;
-      border: none;
-      padding: 0.45rem 0.9rem;
-      font-family: var(--font-sans);
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--texto-secundario);
-      cursor: pointer;
-    }
-
-    .btn-modo.activo {
-      background-color: var(--azul-tinta);
-      color: #FAF9F6;
-    }
-
-    :root[data-theme="dark"] .btn-modo.activo {
-      background-color: var(--acento);
-      color: #0B1520;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) .btn-modo.activo {
-        background-color: var(--acento);
-        color: #0B1520;
-      }
-    }
-
-    .contenedor-matriz-5x5 {
-      display: grid;
-      grid-template-columns: 32px 1fr;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .etiqueta-eje-y {
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      text-align: center;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--texto-tenue);
-    }
-
-    .rejilla-5x5 {
-      display: grid;
-      grid-template-columns: 28px repeat(5, 1fr);
-      gap: 4px;
-    }
-
-    .celda-eje {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--texto-tenue);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.25rem;
-    }
-
-    .celda-calor {
-      min-height: 54px;
-      border: 1px solid var(--borde-fino);
-      padding: 0.3rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-    }
-
-    .celda-puntaje {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      opacity: 0.75;
-    }
-
-    .celda-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2px;
-    }
-
-    .chip-riesgo {
-      font-family: var(--font-mono);
-      font-size: 0.66rem;
-      font-weight: 500;
-      padding: 1px 4px;
-      background-color: var(--bg-superficie);
-      color: var(--texto-primario);
-      border: 1px solid currentColor;
-    }
-
-    .etiqueta-eje-x {
-      text-align: center;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--texto-tenue);
-      margin-top: 0.35rem;
-    }
-
-    .barra-acciones-herramienta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--borde-fino);
-    }
-
-    .grupo-botones {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-    }
-
-    /* Buscador de controles */
-    .barra-busqueda {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .input-busqueda {
-      flex: 1;
-      min-width: 260px;
-      padding: 0.7rem 0.95rem;
-      font-family: var(--font-sans);
-      font-size: 0.92rem;
-      background-color: var(--bg-superficie);
-      color: var(--texto-primario);
-      border: 1px solid var(--borde-fuerte);
-    }
-
-    /* Batería de pruebas SQL */
-    .resumen-pruebas-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      padding: 1rem 1.25rem;
-      background-color: var(--bg-secundario);
-      border: 1px solid var(--borde-fino);
-      margin-bottom: 1.5rem;
-    }
-
-    .lista-pruebas {
-      display: grid;
-      gap: 1.25rem;
-    }
-
-    .ficha-prueba {
-      border: 1px solid var(--borde-fino);
-      background-color: var(--bg-superficie);
-      padding: 1.5rem;
-    }
-
-    .ficha-prueba-cabecera {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.75rem;
-    }
-
-    .meta-prueba {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    .id-prueba {
-      font-family: var(--font-mono);
-      font-weight: 600;
-      font-size: 0.92rem;
-      color: var(--acento);
-    }
-
-    .botones-resultado-prueba {
-      display: inline-flex;
-      border: 1px solid var(--borde-fuerte);
-    }
-
-    .btn-resultado {
-      background: var(--bg-primario);
-      border: none;
-      border-right: 1px solid var(--borde-fuerte);
-      padding: 0.35rem 0.75rem;
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      color: var(--texto-secundario);
-      cursor: pointer;
-    }
-
-    .btn-resultado:last-child {
-      border-right: none;
-    }
-
-    .btn-resultado[data-estado="paso"].activo {
-      background-color: var(--verde-cumple);
-      color: #ffffff;
-    }
-
-    .btn-resultado[data-estado="fallo"].activo {
-      background-color: var(--carmesi-critico);
-      color: #ffffff;
-    }
-
-    .btn-resultado[data-estado="na"].activo {
-      background-color: var(--ambar-parcial);
-      color: #ffffff;
-    }
-
-    .bloque-sql {
-      background-color: var(--bg-codigo);
-      color: #E5E9F0;
-      padding: 1rem 1.15rem;
-      overflow-x: auto;
-      margin: 0.85rem 0;
-      border-left: 3px solid var(--acento);
-      position: relative;
-    }
-
-    .bloque-sql pre {
-      margin: 0;
-      line-height: 1.5;
-      white-space: pre;
-    }
-
-    .btn-copiar-sql {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background-color: rgba(255, 255, 255, 0.1);
-      color: #E5E9F0;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      padding: 0.2rem 0.55rem;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      cursor: pointer;
-    }
-
-    .btn-copiar-sql:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .esperado-prueba {
-      font-size: 0.86rem;
-      color: var(--texto-secundario);
-      border-top: 1px solid var(--borde-fino);
-      padding-top: 0.65rem;
-    }
-
-    /* Contacto (sin <form> real) */
-    .rejilla-contacto {
-      display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 2.5rem;
-    }
-
-    .grupo-campo {
-      margin-bottom: 1.25rem;
-    }
-
-    .grupo-campo label {
-      display: block;
-      font-size: 0.86rem;
-      font-weight: 500;
-      margin-bottom: 0.4rem;
-      color: var(--texto-primario);
-    }
-
-    .input-form,
-    .textarea-form,
-    .select-form {
-      width: 100%;
-      padding: 0.7rem 0.85rem;
-      font-family: var(--font-sans);
-      font-size: 0.92rem;
-      background-color: var(--bg-superficie);
-      color: var(--texto-primario);
-      border: 1px solid var(--borde-fuerte);
-    }
-
-    .textarea-form {
-      min-height: 110px;
-      resize: vertical;
-    }
-
-    .confirmacion-contacto {
-      margin-top: 1.25rem;
-      padding: 1.15rem;
-      border: 1px solid var(--verde-cumple);
-      background-color: var(--cumple-bg);
-      color: var(--cumple-texto);
-      font-size: 0.9rem;
-      display: none;
-    }
-
-    .datos-despacho {
-      border-left: 1px solid var(--borde-fino);
-      padding-left: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    .aviso-estado {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--acento);
-      min-height: 1.2rem;
-    }
-
-    /* Pie de página */
-    footer {
-      padding: 4rem 0;
-      background-color: var(--bg-secundario);
-      font-size: 0.86rem;
-    }
-
-    .pie-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 2rem;
-    }
-
-    .pie-col-1 {
-      grid-column: 1 / 6;
-    }
-
-    .pie-col-2 {
-      grid-column: 6 / 10;
-    }
-
-    .pie-col-3 {
-      grid-column: 10 / 13;
-    }
-
-    .lista-normativa {
-      list-style: none;
-      display: grid;
-      gap: 0.45rem;
-      color: var(--texto-secundario);
-    }
-
-    .aviso-academico {
-      margin-top: 2.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--borde-fuerte);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-      color: var(--texto-tenue);
-    }
-
-    /* Responsividad hasta 360px */
-    @media (max-width: 1024px) {
-      .cabecera-seccion,
-      .cuerpo-seccion,
-      .portada-principal,
-      .portada-lateral,
-      .bloque-medidor,
-      .bloque-mapa-calor,
-      .pie-col-1,
-      .pie-col-2,
-      .pie-col-3 {
-        grid-column: 1 / 13;
-      }
-
-      .portada-lateral {
-        border-left: none;
-        border-top: 1px solid var(--borde-fino);
-        padding-left: 0;
-        padding-top: 2rem;
-      }
-
-      .ficha-tecnica-portada {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .bloque-medidor {
-        border-right: none;
-        border-bottom: 1px solid var(--borde-fino);
-        padding-right: 0;
-        padding-bottom: 2rem;
-      }
-
-      .rejilla-phva {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .columna-phva:nth-child(2) {
-        border-right: none;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .contenedor {
-        padding: 0 1.1rem;
-      }
-
-      .barra-superior {
-        height: auto;
-        padding: 0.75rem 0;
-      }
-
-      .barra-contenido {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .nav-principal {
-        width: 100%;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-      }
-
-      .nav-lista {
-        gap: 0.85rem;
-      }
-
-      section {
-        padding: 3.5rem 0;
-      }
-
-      .lista-problemas,
-      .rejilla-phva,
-      .rejilla-contacto,
-      .ficha-tecnica-portada {
-        grid-template-columns: 1fr;
-      }
-
-      .item-problema,
-      .item-problema:nth-child(even) {
-        padding: 1.5rem 0;
-        border-left: none;
-      }
-
-      .columna-phva {
-        padding: 1.5rem 0;
-        border-right: none;
-        border-bottom: 1px solid var(--borde-fino);
-      }
-
-      .fila-entregable {
-        grid-template-columns: 1fr;
-        gap: 0.4rem;
-      }
-
-      .datos-despacho {
-        border-left: none;
-        border-top: 1px solid var(--borde-fino);
-        padding-left: 0;
-        padding-top: 1.5rem;
-      }
-
-      .panel-instrumento {
-        padding: 1.25rem;
-      }
-
-      .resumen-madurez {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DBA Confidentiality Assesment · Gobierno de confidencialidad en bases de datos Oracle</title>
+<meta name="description" content="Consultoría en administración de bases de datos Oracle: gobierno de confidencialidad bajo ISO/IEC 27001:2022.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;600&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Paleta: Verde cuenca #16372F (base) · Hueso #F4F0E6 (fondo) · Latón apagado #7A5F18 (acento)
+   Estados: Cumple #2B6B47 · Parcial #8A5A00 · No cumple #A33A26 · Crítico #7A1F3D · Sin evaluar #646B67 */
+:root{--base:#16372F;--bg:#F4F0E6;--sf:#EBE5D6;--ink:#1C2421;--mut:#4F5954;--line:#CBC3B0;--br:#7A5F18;--brl:#C9A94E;--on:#F4F0E6;
+--ok:#2B6B47;--par:#8A5A00;--bad:#A33A26;--crit:#7A1F3D;--none:#646B67;--btn:#16372F;--btnt:#F4F0E6;
+--l0:#DCE8DD;--l1:#F1E6C4;--l2:#EDCFC2;--l3:#DDB7C4;
+--serif:"Newsreader",Georgia,"Times New Roman",serif;--sans:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--base:#0A1713;--bg:#0F1C18;--sf:#16261F;--ink:#E8E4D8;--mut:#A9B2AC;--line:#33443D;--br:#D2B35E;--ok:#6FCF97;--par:#E0B050;--bad:#F08A72;--crit:#E58BA8;--none:#9AA39E;--btn:#D2B35E;--btnt:#0F1C18;--l0:#1D3A2B;--l1:#40371B;--l2:#4A2C25;--l3:#4A2332}}
+:root[data-theme="dark"]{--base:#0A1713;--bg:#0F1C18;--sf:#16261F;--ink:#E8E4D8;--mut:#A9B2AC;--line:#33443D;--br:#D2B35E;--ok:#6FCF97;--par:#E0B050;--bad:#F08A72;--crit:#E58BA8;--none:#9AA39E;--btn:#D2B35E;--btnt:#0F1C18;--l0:#1D3A2B;--l1:#40371B;--l2:#4A2C25;--l3:#4A2332}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:calc(64px + env(safe-area-inset-top,0px));-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.6 var(--sans)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--base);z-index:30}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0}
+h2{font-size:clamp(1.75rem,3.6vw,2.5rem)}h3{font-size:1.25rem}
+p{margin:0 0 1em;max-width:64ch}a{color:inherit}small{color:var(--mut)}
+.w{max-width:1200px;margin:0 auto;padding:0 20px}.g{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
+section{padding:80px 0;border-top:1px solid var(--line)}
+.hd{grid-column:1/-1}.bd{grid-column:1/-1}
+@media(min-width:900px){.hd{grid-column:1/5}.bd{grid-column:5/-1}.wide{grid-column:1/-1}}
+:focus-visible{outline:3px solid var(--br);outline-offset:2px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--base);color:var(--on);border-bottom:1px solid #ffffff22}
+nav .w{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 24px;min-height:56px;padding-top:6px;padding-bottom:6px}
+.logo{font:600 1.35rem var(--serif);text-decoration:none;letter-spacing:.01em}.logo span{color:var(--brl)}
+nav ul{display:flex;flex-wrap:wrap;gap:2px 18px;list-style:none;margin:0;padding:0;font-size:.9rem}
+nav a{text-decoration:none;padding:6px 2px;display:inline-block}nav ul a:hover{text-decoration:underline;text-decoration-color:var(--brl);text-underline-offset:5px}
+nav :focus-visible,.hero :focus-visible{outline-color:var(--brl)}
+.hero{background:var(--base);color:var(--on);min-height:calc(100svh - 56px);display:flex;align-items:center;padding:72px 0;border:0}
+.hero h1{font-size:clamp(2.4rem,6.4vw,4.75rem);max-width:17ch;animation:in .9s ease-out both}
+.hero p.s{font-size:1.2rem;max-width:46ch;margin:28px 0 36px;color:#DAD5C6;animation:in .9s .15s ease-out both}
+.hero .row{animation:in .9s .3s ease-out both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.btn{display:inline-block;font:600 .95rem var(--sans);padding:13px 22px;border:1.5px solid var(--btn);background:var(--btn);color:var(--btnt);text-decoration:none;cursor:pointer;border-radius:2px;margin:0 12px 12px 0}
+.btn.o{background:transparent;color:inherit;border-color:currentColor}
+.hero .btn{background:var(--brl);border-color:var(--brl);color:#16372F}.hero .btn.o{background:transparent;color:var(--on);border-color:var(--on)}
+.btn:hover{filter:brightness(1.1)}.btn.sm{padding:8px 14px;font-size:.85rem}
+.cl{list-style:none;margin:0;padding:0}.cl li{padding:20px 0;border-top:1px solid var(--line)}.cl li:first-child{border:0;padding-top:0}
+.cl b{display:block;font:600 1.3rem var(--serif);margin-bottom:4px}.cl span{color:var(--mut)}
+.num{font:400 2.2rem var(--serif);color:var(--br);margin-right:16px;float:left;line-height:1.1;width:2.2rem}
+.sc{overflow-x:auto;max-width:100%}table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;vertical-align:top;padding:11px 12px 11px 0;border-bottom:1px solid var(--line)}th{font-weight:600;border-bottom:2px solid var(--ink);white-space:nowrap}
+.f4{display:grid;grid-template-columns:1fr;gap:0}.f4>div{padding:18px 0;border-top:1px solid var(--line)}
+@media(min-width:760px){.f4{grid-template-columns:repeat(4,1fr);gap:24px}.f4>div{border-top:2px solid var(--br)}}
+.f4 h3{margin-bottom:8px}.f4 p{color:var(--mut);font-size:.95rem}
+.b{display:inline-block;padding:2px 9px;border:1.5px solid currentColor;border-radius:2px;font-weight:600;font-size:.8rem;white-space:nowrap}
+.b.sin,.b.none{color:var(--none)}.b.cumple,.b.bajo{color:var(--ok)}.b.parcial,.b.medio{color:var(--par)}.b.no,.b.alto{color:var(--bad)}.b.critico{color:var(--crit)}
+select,input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:2px;padding:8px 10px;max-width:100%}
+select{min-width:64px}input,textarea{width:100%}label{display:block;font-weight:500;margin:0 0 6px}
+.tool{display:grid;grid-template-columns:1fr;gap:40px;margin-top:8px}
+@media(min-width:1000px){.tool{grid-template-columns:7fr 5fr}}
+.panel{background:var(--sf);padding:28px;border-top:3px solid var(--br)}
+@media(min-width:1000px){.panel{position:sticky;top:76px;align-self:start}}
+.ring{width:100%;max-width:240px;display:block;margin:0 auto 12px}.ring circle{fill:none;stroke-width:14}
+.ring .fg{transition:stroke-dashoffset .8s ease,stroke .3s}.ring text{font-family:var(--serif);fill:var(--ink);text-anchor:middle}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin:16px 0 0;font-size:.9rem}.stats dt{color:var(--mut)}.stats dd{margin:0;font:600 1.2rem var(--serif)}
+.hmw{display:grid;grid-template-columns:auto 1fr;gap:6px;margin-top:20px}.hm{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.c{aspect-ratio:1;min-height:44px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px;font:600 .68rem var(--sans);padding:2px}
+.c.l0{background:var(--l0)}.c.l1{background:var(--l1)}.c.l2{background:var(--l2)}.c.l3{background:var(--l3)}
+.c i{font-style:normal;background:var(--ink);color:var(--bg);padding:0 4px;border-radius:2px}
+.ya{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-size:.8rem;color:var(--mut)}.xa{grid-column:2;text-align:center;font-size:.8rem;color:var(--mut)}
+.tg{display:flex;gap:8px;margin:12px 0}.tg button{font:500 .85rem var(--sans);padding:7px 14px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;border-radius:2px}.tg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.tools{display:flex;flex-wrap:wrap;gap:0 4px;margin:0 0 16px}
+pre{background:var(--base);color:#E8E4D8;padding:14px 16px;overflow-x:auto;font:.82rem/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:10px 0;border-radius:2px;max-width:100%}
+.t{padding:26px 0;border-top:1px solid var(--line)}.t h3{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}.t h3 small{font:400 .9rem var(--sans)}
+.t .ex{color:var(--mut);margin:0 0 12px;font-size:.92rem}.t .tg button[aria-pressed=true].pasa{background:var(--ok);border-color:var(--ok);color:#fff}.t .tg button[aria-pressed=true].falla{background:var(--bad);border-color:var(--bad);color:#fff}.t .tg button[aria-pressed=true].na{background:var(--none);border-color:var(--none);color:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .t .tg button[aria-pressed=true]{color:#0F1C18}}
+.ct{display:grid;gap:16px;max-width:560px}.ok{color:var(--ok)}
+footer{background:var(--base);color:#DAD5C6;padding:48px 0 56px;font-size:.9rem}footer p{max-width:80ch}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
+<nav aria-label="Principal"><div class="w"><a class="logo" href="#top">DBA <span>·</span> Confidentiality Assessment</a>
+<ul><li><a href="#servicio">Servicio</a></li><li><a href="#metodologia">Metodología</a></li><li><a href="#riesgos">Riesgos</a></li><li><a href="#herramienta">Herramienta</a></li><li><a href="#pruebas">Pruebas</a></li><li><a href="#contacto">Contacto</a></li></ul></div></nav>
+<main id="top">
+<section class="hero"><div class="w">
+<h1>Demuestre que sus datos en Oracle siguen siendo confidenciales.</h1>
+<p class="s">Gobierno de confidencialidad bajo ISO/IEC 27001:2022, aplicado y verificado en Oracle Database 21c XE.</p>
+<div class="row"><a class="btn" href="#contacto">Solicitar diagnóstico</a><a class="btn o" href="#herramienta">Ver la herramienta</a></div>
+</div></section>
 
-  <!-- 1. BARRA SUPERIOR -->
-  <header class="barra-superior">
-    <div class="contenedor barra-contenido">
-      <a href="#portada" class="logotipo" aria-label="Vértice Forense, ir al inicio">
-        <span class="logotipo-marca">VÉRTICE</span>
-        <span class="logotipo-sub">Auditoría &amp; Práctica Oracle</span>
-      </a>
-      <nav class="nav-principal" aria-label="Navegación principal">
-        <ul class="nav-lista">
-          <li><a href="#servicio">Servicio</a></li>
-          <li><a href="#metodologia">Metodología</a></li>
-          <li><a href="#riesgos">Riesgos</a></li>
-          <li><a href="#herramienta">Herramienta</a></li>
-          <li><a href="#pruebas">Pruebas</a></li>
-          <li><a href="#contacto">Contacto</a></li>
-        </ul>
-        <button type="button" id="btn-alternar-tema" class="btn-tema" aria-label="Cambiar entre modo claro y oscuro">
-          Tema
-        </button>
-      </nav>
-    </div>
-  </header>
+<section id="problema"><div class="w g"><div class="hd"><h2>El problema</h2></div><div class="bd">
+<ul class="cl">
+<li><b>Los privilegios se heredan y nadie los revisa.</b><span>Un rol anidado concede acceso que ningún inventario registra.</span></li>
+<li><b>Los respaldos salen sin cifrar.</b><span>Quien copia un respaldo lee todos los datos sin pasar por la base.</span></li>
+<li><b>La auditoría se puede manipular.</b><span>Si quien administra también edita los registros, la evidencia no vale.</span></li>
+<li><b>Los entornos de prueba contienen datos reales.</b><span>Cada clon DEV/TEST sin enmascarar multiplica la exposición.</span></li>
+</ul></div></div></section>
 
-  <main id="portada" class="animacion-inicial">
-    <!-- 2. PORTADA -->
-    <section class="portada">
-      <div class="contenedor grid-12">
-        <div class="portada-principal">
-          <span class="subtitulo-normativo">ISO/IEC 27001:2022 · ISO/IEC 27002:2022 · Oracle Database 21c XE (XEPDB1)</span>
-          <h1>Gobierno de confidencialidad y evidencia técnica en bases de datos Oracle.</h1>
-          <p class="frase-valor">
-            Cerramos la brecha entre la política escrita y la configuración real del servidor. Traducimos el Anexo A de la norma en controles observables sobre privilegios, cifrado, redacción y trazabilidad forense.
-          </p>
-          <div class="acciones-portada">
-            <a href="#contacto" class="btn btn-primario">Solicitar diagnóstico</a>
-            <a href="#herramienta" class="btn btn-secundario">Ver la herramienta</a>
-          </div>
-        </div>
-        <aside class="portada-lateral" aria-label="Alcance técnico del servicio">
-          <div class="ficha-tecnica-portada">
-            <div class="dato-ficha">
-              <span class="dato-ficha-valor">6 riesgos R-CONF</span>
-              <span class="dato-ficha-etiqueta">Acceso, autenticación, reposo, uso, red y trazabilidad</span>
-            </div>
-            <div class="dato-ficha">
-              <span class="dato-ficha-valor">12 tareas del DBA</span>
-              <span class="dato-ficha-etiqueta">Evaluadas en escala de madurez 0 a 4 con meta en nivel 3</span>
-            </div>
-            <div class="dato-ficha">
-              <span class="dato-ficha-valor">17 controles Anexo A</span>
-              <span class="dato-ficha-etiqueta">15 controles base de la edición 2022 y 2 complementarios</span>
-            </div>
-            <div class="dato-ficha">
-              <span class="dato-ficha-valor">16 pruebas SQL</span>
-              <span class="dato-ficha-etiqueta">Verificación con segregación de funciones sin usar SYSTEM</span>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
+<section id="servicio"><div class="w g"><div class="hd"><h2>Servicio y alcance</h2></div><div class="bd">
+<p>Trabajamos sobre Oracle Database 21c XE (PDB XEPDB1), con el principio de mínimo privilegio y la Ley 8968 de Costa Rica como marco legal. Entregamos cinco productos.</p>
+<ol class="cl" style="margin-top:28px">
+<li><span class="num">1</span><b>Diagnóstico</b><span>Estado real de cuentas, privilegios, respaldos, auditoría y red.</span></li>
+<li><span class="num">2</span><b>Matriz de evaluación</b><span>Una tarea del DBA por fila, puntuada de 0 a 4 con su evidencia.</span></li>
+<li><span class="num">3</span><b>Plan de tratamiento</b><span>Brechas ordenadas por riesgo, con el riesgo residual esperado.</span></li>
+<li><span class="num">4</span><b>Scripts de verificación</b><span>Preparación, endurecimiento y verificación en SQL, listos para repetir.</span></li>
+<li><span class="num">5</span><b>Informe para el auditor</b><span>Controles observables con consulta, resultado y fecha.</span></li>
+</ol></div></div></section>
 
-    <!-- 3. EL PROBLEMA -->
-    <section id="problema">
-      <div class="contenedor grid-12">
-        <div class="cabecera-seccion">
-          <span class="indice-seccion">01 / Diagnóstico de situación</span>
-          <h2>Un control sugerido sin evidencia observable es solo un documento.</h2>
-          <p>
-            Las auditorías técnicas sobre instancias Oracle revelan de forma recurrente cuatro fallas estructurales que comprometen la confidencialidad del activo más sensible de la organización.
-          </p>
-        </div>
-        <div class="cuerpo-seccion">
-          <div class="lista-problemas">
-            <article class="item-problema">
-              <span class="num-problema">I · Acceso y arquitectura multitenant</span>
-              <h3>Privilegios heredados y concesiones excesivas</h3>
-              <p>
-                Los usuarios cambian de puesto y acumulan permisos anteriores («privilege creep»). Los roles anidados sin control, las concesiones al pseudo-rol «PUBLIC», los comodines «ANY» y los privilegios comunes («CONTAINER=ALL» en CDB$ROOT) otorgan acceso efectivo sobre tablas confidenciales que nadie autorizó de forma explícita.
-              </p>
-            </article>
-            <article class="item-problema">
-              <span class="num-problema">II · Datos en reposo y medios físicos</span>
-              <h3>Respaldos y archivos físicos sin cifrar</h3>
-              <p>
-                Proteger las consultas SQL es inútil si los «datafiles», «online redo logs», «archive logs» o copias de RMAN y Data Pump residen en texto claro en el sistema operativo. Quien obtenga una copia física puede montarla en otro servidor y eludir por completo los perfiles y roles de la instancia original.
-              </p>
-            </article>
-            <article class="item-problema">
-              <span class="num-problema">III · Segregación de funciones y registro</span>
-              <h3>Auditoría insuficiente o manipulable</h3>
-              <p>
-                Los registros de «SYS.AUD$» o «UNIFIED_AUDIT_TRAIL» no son inmutables por sí mismos. Cuando el administrador de infraestructura concentra también los permisos para leer tablas del negocio y borrar la bitácora sin separación entre «DBA», «AUDIT_ADMIN» y «AUDIT_VIEWER», la evidencia forense pierde validez ante un incidente.
-              </p>
-            </article>
-            <article class="item-problema">
-              <span class="num-problema">IV · Datos en uso y fuga de información</span>
-              <h3>Datos reales en entornos de prueba</h3>
-              <p>
-                Los clones de desarrollo y pruebas («DEV/TEST») generados mediante «RMAN DUPLICATE» o «expdp» conservan cédulas, salarios y expedientes reales en entornos con controles laxos. A esto se suma la ejecución libre de paquetes de salida («UTL_FILE», «UTL_HTTP», «UTL_TCP») concedidos por defecto a «PUBLIC».
-              </p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
+<section id="metodologia"><div class="w"><h2 style="margin-bottom:12px">Metodología PHVA</h2>
+<p style="margin-bottom:32px">Cada fase cierra con un producto que el auditor puede revisar. Repetimos el ciclo cada trimestre.</p>
+<div class="f4">
+<div><h3>1. Planificar</h3><p>Alcance, riesgos R-CONF, tareas del DBA y controles seleccionados.</p></div>
+<div><h3>2. Hacer</h3><p>Script de preparación y de endurecimiento: perfiles, roles, redacción, auditoría y TDE.</p></div>
+<div><h3>3. Verificar</h3><p>Batería T-01 a T-16, matriz puntuada de 0 a 4 y evidencia recolectada.</p></div>
+<div><h3>4. Actuar</h3><p>Tratamiento de brechas, riesgo residual recalculado y revisión trimestral.</p></div>
+</div></div></section>
 
-    <!-- 4. SERVICIO Y ALCANCE -->
-    <section id="servicio">
-      <div class="contenedor grid-12">
-        <div class="cabecera-seccion">
-          <span class="indice-seccion">02 / Servicio y alcance</span>
-          <h2>Entregables verificables en el servidor.</h2>
-          <p>
-            Nuestro servicio «Gobierno de confidencialidad en bases de datos Oracle bajo ISO/IEC 27001:2022» está diseñado para Oracle Database 21c Express Edition (contenedor «CDB$ROOT» y base conectable «XEPDB1»), alineado con el principio de mínimo privilegio y la Ley N.° 8968 de Costa Rica.
-          </p>
-        </div>
-        <div class="cuerpo-seccion">
-          <div class="lista-entregables">
-            <div class="fila-entregable">
-              <span class="codigo-entregable">ENT-01</span>
-              <h3>Diagnóstico de arquitectura y segregación</h3>
-              <p>Evaluación de límites operativos en Oracle 21c XE (2 hilos de CPU, 2 GB de RAM, 12 GB de datos antes de «ORA-12592»), revisión de usuarios comunes frente a locales y diseño de tres roles separados: «ROL_SEGURIDAD», «ROL_DBA_INFRA» y «ROL_AUDITOR».</p>
-            </div>
-            <div class="fila-entregable">
-              <span class="codigo-entregable">ENT-02</span>
-              <h3>Matriz de evaluación de madurez (0 a 4)</h3>
-              <p>Calificación estructurada de las 12 tareas críticas del DBA vinculadas con los riesgos «R-CONF-01» a «R-CONF-06». Define criterios objetivos para alcanzar el nivel 3 («Definido») en cada operación.</p>
-            </div>
-            <div class="fila-entregable">
-              <span class="codigo-entregable">ENT-03</span>
-              <h3>Plan de tratamiento y Declaración de Aplicabilidad (SoA)</h3>
-              <p>Justificación de los 15 controles del Anexo A 2022 y los 2 controles complementarios («A8.24» y «A8.8»), equivalencias con la edición 2013 y cuantificación del riesgo inherente frente al residual esperado para aceptación de la dirección.</p>
-            </div>
-            <div class="fila-entregable">
-              <span class="codigo-entregable">ENT-04</span>
-              <h3>Scripts de implementación, endurecimiento y verificación</h3>
-              <p>Entrega de tres scripts probados en «XEPDB1»: «00_preparacion.sql» (cuentas nominales, perfiles, Data Redaction, VPD y políticas de auditoría), «01_endurecimiento.sql» (revocación de «UTL_*», keystore TDE «AES256», modo «ARCHIVELOG» y retención) y «02_verificacion.sql».</p>
-            </div>
-            <div class="fila-entregable">
-              <span class="codigo-entregable">ENT-05</span>
-              <h3>Informe de evidencia observable para el auditor</h3>
-              <p>Expediente técnico de los 15 controles observables («CO-01» a «CO-15») y la prueba de enmascaramiento estático en clones («T-16»), obtenido mediante una cuenta de lectura restringida sin «SELECT_CATALOG_ROLE».</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+<section id="riesgos"><div class="w"><h2 style="margin-bottom:12px">Riesgos de confidencialidad</h2>
+<p>Ajuste la probabilidad (P) y el impacto (I) de 1 a 5. El nivel es P × I. El residual baja a su objetivo solo cuando todas las tareas asociadas llegan al nivel 3 y ninguna prueba ligada falla.</p>
+<div class="sc"><table><caption class="sr">Riesgos R-CONF con valoración editable</caption><thead><tr><th>ID</th><th>Riesgo</th><th>Categoría</th><th>P</th><th>I</th><th>Inherente</th><th>Objetivo</th><th>Residual</th></tr></thead><tbody id="rk"></tbody></table></div>
+</div></section>
 
-    <!-- 5. METODOLOGÍA PHVA -->
-    <section id="metodologia">
-      <div class="contenedor">
-        <div class="grid-12" style="margin-bottom: 2.5rem;">
-          <div class="cabecera-seccion">
-            <span class="indice-seccion">03 / Metodología operativa</span>
-            <h2>Ciclo PHVA de mejora continua.</h2>
-          </div>
-          <div class="cuerpo-seccion">
-            <p>
-              La cláusula 10.1 de la norma ISO/IEC 27001:2022 exige mejora continua del Sistema de Gestión de Seguridad de la Información (SGSI). Organizamos la intervención en cuatro fases disciplinadas; cada fase produce un artefacto auditable.
-            </p>
-          </div>
-        </div>
+<section id="herramienta"><div class="w"><h2 style="margin-bottom:12px">Herramienta de evaluación</h2>
+<p>Puntúe cada tarea del DBA de 0 a 4. Meta: nivel 3. El estado se calcula solo: Cumple con 3 o 4, Parcial con 2, No cumple con 0 o 1.</p>
+<div class="tools"><button class="btn sm" id="cp" type="button">Copiar resumen</button><button class="btn sm o" id="rs" type="button">Borrar datos</button><span id="msg" role="status" style="align-self:center;font-size:.9rem"></span></div>
+<div class="tool"><div class="sc"><table><caption class="sr">Matriz de evaluación por tarea del DBA</caption><thead><tr><th>N.°</th><th>Tarea y criterio de nivel 3</th><th>Nivel</th><th>Estado</th></tr></thead><tbody id="tk"></tbody></table></div>
+<aside class="panel" aria-label="Panel de madurez"><h3>Madurez global</h3><div id="pn"></div>
+<h3 style="margin-top:28px">Mapa de calor de riesgos</h3>
+<div class="tg" role="group" aria-label="Tipo de valoración"><button type="button" data-v="i" aria-pressed="true">Inherente</button><button type="button" data-v="r" aria-pressed="false">Residual</button></div>
+<div class="hmw"><div class="ya">Probabilidad</div><div class="hm" id="hm"></div><div class="xa">Impacto</div></div></aside></div>
+</div></section>
 
-        <div class="rejilla-phva">
-          <article class="columna-phva">
+<section id="controles"><div class="w g"><div class="hd"><h2>Controles ISO/IEC 27001:2022</h2><p style="margin-top:16px;color:var(--mut)">Cada control con la evidencia que un auditor observa en Oracle.</p></div><div class="bd">
+<label for="bq">Buscar control o vista</label><input id="bq" type="search" placeholder="Por ejemplo: A8.13 o DBA_PROFILES" autocomplete="off">
+<div class="sc" style="margin-top:16px"><table><caption class="sr">Controles y evidencia observable</caption><thead><tr><th>Control</th><th>Nombre</th><th>Evidencia en Oracle</th></tr></thead><tbody id="cc"></tbody></table></div><p id="cn" role="status" style="margin-top:12px;color:var(--mut)"></p>
+</div></div></section>
+
+<section id="pruebas"><div class="w"><h2 style="margin-bottom:12px">Batería de pruebas</h2>
+<p>Ejecute cada consulta con la cuenta indicada en SQL Developer (modo script) y registre el resultado. Una prueba fallida devuelve el riesgo asociado a su valor inherente.</p>
+<div id="ts"></div></div></section>
+
+<section id="contacto"><div class="w g"><div class="hd"><h2>Contacto</h2>
+<p style="margin-top:16px">DBA · Confidentiality Assessment<br>Avenida Central 100, San José, Costa Rica<br>+506 2000 0000<br>contacto@dba-confidentiality-assessment.example</p><small>Datos ficticios.</small></div>
+<div class="bd"><div class="ct">
+<div><label for="fn">Nombre</label><input id="fn" autocomplete="name"></div>
+<div><label for="fe">Correo</label><input id="fe" type="email" autocomplete="email"></div>
+<div><label for="fm">Qué necesita revisar</label><textarea id="fm" rows="4"></textarea></div>
+<div><button class="btn" id="fs" type="button">Solicitar diagnóstico</button></div>
+<p id="fr" role="status"></p></div></div></div></section>
+</main>
+<footer><div class="w"><p><b>Base normativa:</b> ISO/IEC 27001:2022, ISO/IEC 27002:2022 y Ley 8968 de Protección de la Persona frente al Tratamiento de sus Datos Personales (Costa Rica).</p>
+<p>Proyecto académico de Administración de Bases de Datos, Universidad Nacional de Costa Rica. DBA · Confidentiality Assessment es una firma ficticia; ningún dato se envía.</p></div></footer>
+
+<script>
+const R=[["R-CONF-01","Exceso de privilegios y privilegios heredados","Acceso",4,5,[2,4],[1,2]],
+["R-CONF-02","Acceso no autorizado por credenciales débiles o sistema sin parchear","Autenticación",4,4,[2,4],[1,3,8]],
+["R-CONF-03","Fuga desde archivos físicos, respaldos y datos residuales","Datos en reposo",3,5,[1,5],[4,6,10]],
+["R-CONF-04","Exposición de datos sensibles a usuarios y entornos no autorizados","Datos en uso",4,4,[2,3],[5,12]],
+["R-CONF-05","Intercepción de datos y exposición del listener","Red",3,4,[1,4],[9]],
+["R-CONF-06","Trazabilidad insuficiente o manipulable","Trazabilidad",3,5,[2,4],[7,11]]];
+const T=[[1,"Gestión de usuarios","A5.16 / A5.18","cuentas nominales sin cuentas por defecto abiertas ni inactivas más de 90 días","T-02 T-15"],
+[2,"Gestión de privilegios y roles","A5.15 / A8.2 / A8.3","acceso solo por roles sin ANY ni DBA en cuentas no administrativas","T-04 T-05 T-06 T-07"],
+[3,"Autenticación","A5.17 / A8.5","perfil con verificación de complejidad, bloqueo a 5 intentos, vida de 90 días","T-03"],
+[4,"Cifrado TDE","A8.24 / A8.13","keystore abierto y tablespaces sensibles cifrados","T-09"],
+[5,"Enmascaramiento y redacción","A8.11 / A5.12","columnas clasificadas con redacción comprobada","T-01 T-10"],
+[6,"Copias de seguridad","A8.13","ARCHIVELOG, respaldos cifrados, restauración probada","T-11"],
+[7,"Auditoría","A8.15","políticas activas sobre privilegios críticos, inicios de sesión y tablas sensibles","T-13"],
+[8,"Parcheo y configuración","A8.5 / A8.8","versión y parches registrados y revisados cada trimestre","T-08"],
+[9,"Listener y red","A8.20","listener restringido y sesiones cifradas","T-14"],
+[10,"Eliminación segura","A8.10","papelera, respaldos obsoletos y usuarios de baja depurados","T-15"],
+[11,"Gestión de logs","A5.33 / A8.15","retención configurada, registros protegidos y enviados al SIEM","T-13"],
+[12,"Clones DEV/TEST","A5.12 / A8.11 / A8.12","ningún clon con datos reales y exportaciones restringidas","T-10 T-12 T-16"]];
+const C=[["A5.12","Clasificación de la información","DBA_COL_COMMENTS"],["A5.15","Control de acceso","DBA_ROLE_PRIVS y DBA_TAB_PRIVS"],["A5.16","Gestión de identidad","DBA_USERS y DBA_USERS_WITH_DEFPWD"],["A5.17","Información de autenticación","DBA_PROFILES"],["A5.18","Derechos de acceso","DBA_UNUSED_PRIVS"],["A5.33","Protección de registros","DBA_AUDIT_MGMT_CONFIG_PARAMS"],["A8.2","Derechos de acceso privilegiados","V$PWFILE_USERS y DBA_SYS_PRIVS"],["A8.3","Restricción del acceso a la información","DBA_POLICIES"],["A8.5","Autenticación segura","DBA_PROFILES y sqlnet.ora"],["A8.10","Eliminación de la información","DBA_RECYCLEBIN"],["A8.11","Enmascaramiento de datos","REDACTION_POLICIES"],["A8.12","Prevención de fuga de datos","DBA_ROLE_PRIVS y DBA_HOST_ACES"],["A8.13","Copias de seguridad","V$DATABASE y V$BACKUP_SET_DETAILS"],["A8.15","Registro","AUDIT_UNIFIED_ENABLED_POLICIES"],["A8.20","Seguridad de redes","lsnrctl status y V$SESSION_CONNECT_INFO"],["A8.24","Uso de criptografía (complementario)","V$ENCRYPTION_WALLET"],["A8.8","Vulnerabilidades técnicas (complementario)","V$VERSION y DBA_REGISTRY_SQLPATCH"]];
+const Q=[
+["T-01","Columnas sin clasificar","A5.12","aud_pedro","SELECT c.table_name, c.column_name\n  FROM dba_tab_columns c\n  LEFT JOIN dba_col_comments m ON m.owner=c.owner\n   AND m.table_name=c.table_name AND m.column_name=c.column_name\n WHERE c.owner='NOMINA'\n   AND (m.comments IS NULL OR m.comments NOT LIKE 'CLASIFICACION=%');","0 filas: toda columna tiene CLASIFICACION="],
+["T-02","Cuentas por defecto abiertas","A5.16","aud_pedro","SELECT d.username FROM dba_users_with_defpwd d\n  JOIN dba_users u ON u.username=d.username\n WHERE u.account_status='OPEN';\nSELECT username, account_status FROM dba_users\n WHERE oracle_maintained='N';","0 cuentas por defecto abiertas; todo usuario es nominal"],
+["T-03","Perfiles de contraseña","A5.17 · A8.5","aud_pedro","SELECT profile, resource_name, limit FROM dba_profiles\n WHERE resource_name IN ('FAILED_LOGIN_ATTEMPTS','PASSWORD_LIFE_TIME',\n       'PASSWORD_LOCK_TIME','PASSWORD_VERIFY_FUNCTION')\n   AND profile IN ('DEFAULT','PERFIL_SEGURO');","PERFIL_SEGURO: 5 intentos, vida de 90 días y función de verificación"],
+["T-04","Acceso por roles","A5.15","aud_pedro","SELECT grantee, table_name, privilege FROM dba_tab_privs\n WHERE owner='NOMINA' AND grantee='PUBLIC';\nSELECT grantee, table_name, privilege FROM dba_tab_privs\n WHERE owner='NOMINA' AND grantee<>'NOMINA'\n   AND grantee NOT IN (SELECT role FROM dba_roles);","Sin concesiones a PUBLIC ni directas; el único acceso efectivo es ANA_ANALISTA mediante ROL_ANALISTA_NOMINA"],
+["T-05","Privilegios administrativos","A8.2","aud_pedro","SELECT grantee, privilege FROM dba_sys_privs\n WHERE privilege LIKE '%ANY%'\n   AND grantee IN (SELECT username FROM dba_users\n                    WHERE oracle_maintained='N');\nSELECT * FROM v$pwfile_users;","Ningún rol DBA en cuentas nominales; el único ANY es AUDIT ANY de SEC_MARIA; solo SYS y SYSTEM en el archivo de contraseñas"],
+["T-06","Privilegios concedidos y no usados","A5.18","sec_maria → aud_pedro","EXEC DBMS_PRIVILEGE_CAPTURE.CREATE_CAPTURE('CAP_REVISION',\n     DBMS_PRIVILEGE_CAPTURE.G_DATABASE);\nEXEC DBMS_PRIVILEGE_CAPTURE.ENABLE_CAPTURE('CAP_REVISION');\n-- periodo de uso normal\nEXEC DBMS_PRIVILEGE_CAPTURE.DISABLE_CAPTURE('CAP_REVISION');\nEXEC DBMS_PRIVILEGE_CAPTURE.GENERATE_RESULT('CAP_REVISION');\nSELECT * FROM dba_unused_privs WHERE capture='CAP_REVISION';","Lista de privilegios concedidos y no usados; acta de revisión"],
+["T-07","Restricción por fila (VPD)","A8.3","ana_analista","SELECT COUNT(*) AS filas_visibles,\n       COUNT(DISTINCT departamento) AS departamentos\n  FROM nomina.salarios;","1 fila y 1 departamento (TI). Si ve las 3 filas, la política VPD no existe y A8.3 no cumple"],
+["T-08","Versión y parches","A8.8","aud_pedro","SELECT banner_full FROM v$version;\nSELECT patch_id, action, status, description, action_time\n  FROM dba_registry_sqlpatch ORDER BY action_time;","Versión 21c y parches en estado SUCCESS, con fecha de la última revisión"],
+["T-09","Cifrado TDE","A8.24","aud_pedro","SELECT wrl_type, status, wallet_type FROM v$encryption_wallet;\nSELECT tablespace_name, encrypted FROM dba_tablespaces;\n-- terminal:\n-- strings .../ts_conf01.dbf | grep -i \"Empleado\"   (sin coincidencias)","Keystore OPEN; TS_CONF con ENCRYPTED=YES; sin coincidencias en el datafile cifrado"],
+["T-10","Redacción de datos","A8.11","ana_analista","SELECT empleado, cedula, salario FROM nomina.salarios;\n-- catálogo (aud_pedro):\nSELECT object_name, column_name FROM redaction_columns;","EMPLEADO y CEDULA como espacio, SALARIO = 0"],
+["T-11","Respaldos","A8.13","aud_pedro · RMAN","SELECT log_mode FROM v$database;\nSELECT backup_type, encrypted, completion_time\n  FROM v$backup_set_details\n ORDER BY completion_time DESC FETCH FIRST 5 ROWS ONLY;\n-- terminal: ls -l /opt/oracle/fast_recovery_area","ARCHIVELOG; respaldo con ENCRYPTED=YES; permisos 750"],
+["T-12","Prevención de fuga","A8.12","aud_pedro","SELECT grantee, granted_role FROM dba_role_privs\n WHERE granted_role IN ('DATAPUMP_EXP_FULL_DATABASE','EXP_FULL_DATABASE')\n   AND grantee NOT IN ('SYS','SYSTEM','DBA');\nSELECT grantee, table_name FROM dba_tab_privs\n WHERE grantee='PUBLIC'\n   AND table_name IN ('UTL_FILE','UTL_HTTP','UTL_SMTP','UTL_TCP');\nSELECT host, principal, privilege FROM dba_host_aces;","Sin roles de exportación en cuentas nominales; UTL_* revocados a PUBLIC; sin ACL de red para cuentas de aplicación"],
+["T-13","Auditoría y registros","A8.15 · A5.33","sec_maria → aud_pedro","EXEC DBMS_AUDIT_MGMT.FLUSH_UNIFIED_AUDIT_TRAIL;\nSELECT policy_name, enabled_option FROM audit_unified_enabled_policies;\nSELECT event_timestamp, dbusername, action_name\n  FROM unified_audit_trail WHERE object_name='SALARIOS'\n ORDER BY event_timestamp DESC FETCH FIRST 10 ROWS ONLY;\nSELECT * FROM dba_audit_mgmt_cleanup_jobs;","Política activa, registro de ANA_ANALISTA sobre SALARIOS y trabajo de purga configurado"],
+["T-14","Listener y red","A8.20","aud_pedro · terminal","SELECT network_service_banner FROM v$session_connect_info\n WHERE sid=SYS_CONTEXT('USERENV','SID');\n-- terminal: lsnrctl status\n-- terminal: grep -iE \"ENCRYPTION|INVITED|VALIDNODE\" sqlnet.ora\n-- otro equipo: nmap -p 1521 <IP_del_servidor>","Sesión cifrada; listener con restricciones; puerto cerrado o filtrado para equipos no autorizados"],
+["T-15","Eliminación y retención","A8.10","aud_pedro · RMAN","SELECT owner, original_name, droptime FROM dba_recyclebin;\nSELECT username, last_login FROM dba_users\n WHERE oracle_maintained='N' AND account_status='OPEN'\n   AND COALESCE(last_login, CAST(created AS TIMESTAMP WITH TIME ZONE))\n       < SYSTIMESTAMP - INTERVAL '90' DAY;\n-- RMAN: REPORT OBSOLETE;","0 filas en ambas consultas; 0 respaldos obsoletos"],
+["T-16","Enmascaramiento estático de clones DEV/TEST","A8.11 · A8.12","nomina","CREATE TABLE salarios_dev AS\n  SELECT id, sec_maria.pkg_mask.f_mask_txt(empleado) AS empleado,\n         departamento,\n         sec_maria.pkg_mask.f_mask_txt(cedula) AS cedula,\n         sec_maria.pkg_mask.f_mask_sal(salario) AS salario\n    FROM salarios;\nSELECT COUNT(*) AS valores_reales_conservados\n  FROM salarios s JOIN salarios_dev d ON d.id=s.id\n WHERE d.empleado=s.empleado OR d.cedula=s.cedula OR d.salario=s.salario;\nDROP TABLE salarios_dev PURGE;","0 valores reales conservados en la copia; la copia se elimina con PURGE"]];
+
+const $=id=>document.getElementById(id),esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+let S={sc:{},t:{},adj:{},v:"i"};
+try{Object.assign(S,JSON.parse(localStorage.getItem("meridian-v1")||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem("meridian-v1",JSON.stringify(S))}catch(e){}};
+const LN=["bajo","medio","alto","crítico"],LC=["bajo","medio","alto","critico"],lv=v=>v<5?0:v<10?1:v<17?2:3;
+const SL={sin:"Sin evaluar",cumple:"Cumple",parcial:"Parcial",no:"No cumple"};
+const st=n=>S.sc[n]==null?"sin":S.sc[n]>=3?"cumple":S.sc[n]==2?"parcial":"no";
+const bd=(c,t)=>`<span class="b ${c}">${t}</span>`;
+const pi=r=>S.adj[r[0]]||[r[3],r[4]];
+const failed=n=>T[n-1][4].split(" ").some(t=>S.t[t]==="falla");
+function res(r){const [p,i]=pi(r),ok=r[6].every(n=>S.sc[n]>=3&&!failed(n));return ok?{ok,p:r[5][0],i:r[5][1],v:r[5][0]*r[5][1]}:{ok,p,i,v:p*i}}
+const sel=(max,min,val,attr)=>`<select ${attr}>${Array.from({length:max-min+1},(_,k)=>`<option${k+min==val?" selected":""}>${k+min}</option>`).join("")}</select>`;
+
+$("rk").innerHTML=R.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${sel(5,1,r[3],`data-p="${r[0]}" aria-label="Probabilidad ${r[0]}"`)}</td><td>${sel(5,1,r[4],`data-i="${r[0]}" aria-label="Impacto ${r[0]}"`)}</td><td id="in-${r[0]}"></td><td>${r[5][0]}×${r[5][1]} = ${r[5][0]*r[5][1]}</td><td id="re-${r[0]}"></td></tr>`).join("");
+$("tk").innerHTML=T.map(t=>`<tr><td>${t[0]}</td><td><b>${t[1]}</b> <small>${t[2]}</small><br><small>Nivel 3: ${t[3]}. Pruebas: ${t[4].replace(/ /g,", ")}.</small></td><td><select data-t="${t[0]}" aria-label="Nivel de ${t[1]}"><option value="">—</option>${[0,1,2,3,4].map(k=>`<option>${k}</option>`).join("")}</select></td><td id="st-${t[0]}"></td></tr>`).join("");
+$("ts").innerHTML=Q.map(q=>`<div class="t"><h3>${q[0]} · ${q[1]} <small>${q[2]} · cuenta: ${q[3]}</small></h3><pre><code>${esc(q[4])}</code></pre><p class="ex"><b>Resultado esperado:</b> ${q[5]}.</p><div class="tg" role="group" aria-label="Resultado de ${q[0]}"><button type="button" class="pasa" data-q="${q[0]}" data-r="pasa" aria-pressed="false">Pasó</button><button type="button" class="falla" data-q="${q[0]}" data-r="falla" aria-pressed="false">Falló</button><button type="button" class="na" data-q="${q[0]}" data-r="na" aria-pressed="false">No aplica</button></div></div>`).join("");
+
+function ctl(){const f=$("bq").value.trim().toLowerCase(),l=C.filter(c=>c.join(" ").toLowerCase().includes(f));
+$("cc").innerHTML=l.map(c=>`<tr><td><b>${c[0]}</b></td><td>${c[1]}</td><td><code>${c[2]}</code></td></tr>`).join("");$("cn").textContent=l.length?l.length+" de "+C.length+" controles.":"Ningún control coincide con la búsqueda."}
+
+function panel(){const v=Object.values(S.sc).filter(x=>x!=null),n=v.length,avg=n?v.reduce((a,b)=>a+b,0)/n:0,Cc=2*Math.PI*70,cnt=k=>T.filter(t=>st(t[0])===k).length,
+col=!n?"var(--none)":avg>=3?"var(--ok)":avg>=2?"var(--par)":"var(--bad)",nm=["Inexistente","Inicial","Parcial","Definido","Gestionado"][Math.round(avg)],ra=R.filter(r=>res(r).ok).length;
+$("pn").innerHTML=`<svg class="ring" viewBox="0 0 180 180" role="img" aria-label="Madurez global ${n?avg.toFixed(1):"sin evaluar"} de 4"><circle cx="90" cy="90" r="70" stroke="var(--line)"/><circle class="fg" cx="90" cy="90" r="70" stroke="${col}" stroke-dasharray="${Cc}" stroke-dashoffset="${Cc*(1-avg/4)}" transform="rotate(-90 90 90)"/><text x="90" y="96" font-size="44">${n?avg.toFixed(1):"—"}</text><text x="90" y="118" font-size="13">${n?nm:"de 4"}</text></svg>
+<dl class="stats"><div><dt>Cumple</dt><dd>${cnt("cumple")}</dd></div><div><dt>Parcial</dt><dd>${cnt("parcial")}</dd></div><div><dt>No cumple</dt><dd>${cnt("no")}</dd></div><div><dt>Sin evaluar</dt><dd>${cnt("sin")}</dd></div><div><dt>Riesgos en objetivo</dt><dd>${ra} de ${R.length}</dd></div></dl>`}
+
+function heat(){const cells=[];for(let p=5;p>=1;p--)for(let i=1;i<=5;i++){const ids=R.filter(r=>{const x=S.v==="i"?pi(r):[res(r).p,res(r).i];return x[0]===p&&x[1]===i}).map(r=>r[0].slice(-2)),L=lv(p*i);
+cells.push(`<div class="c l${L}" role="img" aria-label="P ${p}, I ${i}, nivel ${LN[L]}${ids.length?", riesgos "+ids.join(", "):""}">${ids.map(d=>`<i>${d}</i>`).join("")}</div>`)}
+$("hm").innerHTML=cells.join("")}
+
+function upd(){R.forEach(r=>{const [p,i]=pi(r),v=p*i,x=res(r);$("in-"+r[0]).innerHTML=bd(LC[lv(v)],v+" · "+LN[lv(v)]);
+$("re-"+r[0]).innerHTML=bd(LC[lv(x.v)],x.v+" · "+LN[lv(x.v)])+(x.ok?"":"<br><small>valor inherente</small>")});
+T.forEach(t=>{$("st-"+t[0]).innerHTML=bd(st(t[0]),SL[st(t[0])])});
+panel();heat();
+document.querySelectorAll("[data-q]").forEach(b=>b.setAttribute("aria-pressed",S.t[b.dataset.q]===b.dataset.r));
+document.querySelectorAll("[data-v]").forEach(b=>b.setAttribute("aria-pressed",S.v===b.dataset.v))}
+function sync(){document.querySelectorAll("[data-t]").forEach(s=>s.value=S.sc[s.dataset.t]==null?"":S.sc[s.dataset.t]);
+R.forEach(r=>{const a=pi(r);document.querySelector(`[data-p="${r[0]}"]`).value=a[0];document.querySelector(`[data-i="${r[0]}"]`).value=a[1]})}
+
+document.addEventListener("change",e=>{const d=e.target.dataset;if(d.t){S.sc[d.t]=e.target.value===""?null:+e.target.value}
+else if(d.p||d.i){const r=R.find(x=>x[0]===(d.p||d.i)),a=[...pi(r)];a[d.p?0:1]=+e.target.value;S.adj[r[0]]=a}else return;save();upd()});
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+if(d.q){S.t[d.q]=S.t[d.q]===d.r?null:d.r}else if(d.v){S.v=d.v}else return;save();upd()});
+$("bq").addEventListener("input",ctl);
+const say=t=>{$("msg").textContent=t;setTimeout(()=>{$("msg").textContent=""},4000)};
+$("cp").onclick=async()=>{const v=Object.values(S.sc).filter(x=>x!=null),avg=v.length?(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1):"sin evaluar";
+const tx="Meridian Datos · Matriz de evaluación\nMadurez global: "+avg+" de 4\n\n"+T.map(t=>t[0]+". "+t[1]+" ("+t[2]+"): "+(S.sc[t[0]]==null?"sin evaluar":"nivel "+S.sc[t[0]])+" · "+SL[st(t[0])]).join("\n")+"\n\nRiesgos:\n"+R.map(r=>{const [p,i]=pi(r),x=res(r);return r[0]+": inherente "+p*i+" ("+LN[lv(p*i)]+"), residual "+x.v+" ("+LN[lv(x.v)]+")"}).join("\n");
+try{await navigator.clipboard.writeText(tx);say("Resumen copiado.")}catch(err){try{const a=document.createElement("textarea");a.value=tx;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();say("Resumen copiado.")}catch(e2){say("No se pudo copiar el resumen.")}}};
+$("rs").onclick=()=>{if(!confirm("¿Borrar todos los puntajes, resultados de pruebas y ajustes de riesgo?"))return;S={sc:{},t:{},adj:{},v:"i"};save();sync();upd();say("Datos borrados.")};
+$("fs").onclick=()=>{const n=$("fn").value.trim(),m=$("fe").value.trim(),o=$("fr");
+if(!n||!/^\S+@\S+\.\S+$/.test(m)){o.className="";o.textContent="Escriba su nombre y un correo válido.";return}
+o.className="ok";o.textContent="Gracias, "+n+". Esta página no envía datos: la solicitud queda solo en pantalla."};
+ctl();sync();upd();
+</script>
+</body>
+</html>
